@@ -12,6 +12,13 @@
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
 
+void write_color(const Math::Vector3d &color)
+{
+    int r = static_cast<int>(color.x);
+    int g = static_cast<int>(color.y);
+    int b = static_cast<int>(color.z);
+    std::cout << r << " " << g << " " << b << "\n";
+}
 
 int main()
 {
@@ -27,9 +34,9 @@ int main()
             double v = (double)j / (y_axis - 1);
             RayTracer::Ray r = cam.ray(u, v);
             if (s.hits(r)) {
-                std::cout << "255 0 0\n";
+                write_color(Math::Vector3d(255, 0, 0));
             } else {
-                std::cout << "255 255 255\n";
+                write_color(Math::Vector3d(255, 255, 255));
             }
         }
     }

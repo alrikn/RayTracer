@@ -12,12 +12,21 @@
 #include <iostream>
 namespace RayTracer {
 
+enum Color {
+    RED,
+    GREEN,
+    BLUE,
+    WHITE
+};
+
 class IShape
 {
     protected:
     public:
         virtual ~IShape() = default;
         virtual bool hits(const RayTracer::Ray& ray) const = 0;
+        virtual void setColor(Color color) = 0;
+        virtual Color getColor() const = 0;
 };
 }
 #endif

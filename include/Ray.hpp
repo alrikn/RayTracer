@@ -25,6 +25,7 @@ class Ray
 
         Math::Point3d origin;
         Math::Vector3d direction;
+        Math::Vector3d color_vector = Math::Vector3d(255, 255, 255); //default color is white, can be modified by shapes when ray hits them
 
 };
 

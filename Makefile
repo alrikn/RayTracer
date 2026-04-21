@@ -45,7 +45,7 @@ $(CONVERT_NAME): $(CONVERT_OBJ)
 convert: $(CONVERT_NAME)
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) $(CONVERT_OBJ)
 
 fclean: clean
 	rm -f $(NAME) $(CONVERT_NAME)

@@ -16,23 +16,28 @@ extern "C" {
     #include "stb_image_write.h"
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <input.ppm>\n";
-        return 1;
+int main(int argc, char *argv[])
+{
+    std::string output_filename = "output.png";
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <input.ppm> [output.png]\n";
+        return 84;
+    }
+    if (argc >= 3) {
+        output_filename = argv[2];
     }
 
     std::ifstream file(argv[1]);
     if (!file) {
-        std::cerr << "Failed to open file\n";
-        return 1;
+        std::cerr << "Failed to open \"" << argv[1] << "\" file\n";
+        return 84;
     }
 
     std::string format;
     file >> format;
     if (format != "P3") {
         std::cerr << "Only P3 format supported\n";
-        return 1;
+        return 84;
     }
 
     int width, height, maxval;
@@ -48,10 +53,10 @@ int main(int argc, char *argv[]) {
         );
     }
 
-    if (!stbi_write_png("output.png", width, height, 3,
+    if (!stbi_write_png(output_filename.c_str(), width, height, 3,
                         image.data(), width * 3)) {
         std::cerr << "Failed to write PNG\n";
-        return 1;
+        return 84;
     }
 
     std::cout << "Conversion successful!\n";

@@ -29,6 +29,11 @@ class Vector3d
         //dot product of this vector with another vector
         double dot(const Vector3d &other) const;
 
+        void translate(const Vector3d &translation);
+        void rotateX(double angle);
+        void rotateY(double angle);
+        void rotateZ(double angle);
+
         /*operator overloading*/
         Vector3d& operator+=(const Vector3d& rhs);
         Vector3d& operator-=(const Vector3d& rhs);
