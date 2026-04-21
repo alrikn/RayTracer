@@ -36,7 +36,8 @@ int main()
             if (s.hits(r)) {
                 write_color(Math::Vector3d(255, 0, 0));
             } else {
-                write_color(Math::Vector3d(255, 255, 255));
+                //if it didn't hit jack then its black innit?
+                write_color(Math::Vector3d(0, 0, 0));
             }
         }
     }
