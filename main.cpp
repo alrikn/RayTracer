@@ -15,8 +15,8 @@
 
 int main()
 {
-    int x_axis = 400;
-    int y_axis = 200;
+    int x_axis = 4000;
+    int y_axis = 2000;
 
     std::cout << "P3\n" << x_axis << " " << y_axis << "\n255\n"; //ppm header
     RayTracer::Camera cam;
@@ -27,7 +27,7 @@ int main()
             double v = (double)j / (y_axis - 1);
             RayTracer::Ray r = cam.ray(u, v);
             if (s.hits(r)) {
-                std::cout << "0 0 255\n";
+                std::cout << "255 0 0\n";
             } else {
                 std::cout << "255 255 255\n";
             }
