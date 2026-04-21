@@ -20,7 +20,8 @@ class Camera
     private:
     protected:
     public:
-        Camera();
+        Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};
+        Camera(const Math::Point3d& origin, const Rectangle& screen) : origin(origin), screen(screen) {};
         ~Camera() = default;
 
         Math::Point3d origin;

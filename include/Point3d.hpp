@@ -18,7 +18,7 @@ class Point3d
     private:
     protected:
     public:
-        Point3d();
+        Point3d() = default;
         Point3d(double x, double y, double z) : x(x), y(y), z(z) {};
         ~Point3d() = default;
 

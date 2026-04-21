@@ -18,7 +18,7 @@ class Rectangle : public Ashape
     private:
     protected:
     public:
-        Rectangle();
+        Rectangle() = default;
         Rectangle(const Math::Point3d &origin, const Math::Vector3d &bottom_side, const Math::Vector3d &left_side) : Ashape(origin), bottom_side(bottom_side), left_side(left_side) {};
         ~Rectangle() = default;
 

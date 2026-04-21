@@ -22,7 +22,7 @@ class Ashape : public IShape
     private:
     protected:
     public:
-        Ashape();
+        Ashape() = default;
         Ashape(const Math::Point3d& center) : center(center) {};
         ~Ashape() = default;
 
