@@ -11,6 +11,7 @@
 #include "Ray.hpp"
 #include "Vector3d.hpp"
 #include <iostream>
+#include <optional>
 namespace RayTracer {
 
 //these be a few colors shapes can be at
@@ -36,7 +37,9 @@ class IShape
     protected:
     public:
         virtual ~IShape() = default;
-        virtual bool hits(const RayTracer::Ray& ray) const = 0; //this should really return a hit record, but for now we can just return a bool to indicate if it hit or not
+
+        //optional allows us to return nullptr if no hit
+        virtual std::optional<HitRecord> hits(const RayTracer::Ray& ray) const = 0; //this should really return a hit record, but for now we can just return a bool to indicate if it hit or not
         virtual void setColor(Color color) = 0;
         virtual Color getColor() const = 0;
 };

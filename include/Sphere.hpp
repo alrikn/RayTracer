@@ -9,8 +9,10 @@
     #define INCLUDED_SPHERE_HPP
 
 #include "Ashape.hpp"
+#include "IShape.hpp"
 #include "Point3d.hpp"
 #include "Ray.hpp"
+#include <optional>
 namespace RayTracer {
 
 
@@ -26,7 +28,7 @@ class Sphere : public Ashape
 
         double radius = 0;
 
-        bool hits(const RayTracer::Ray& ray) const override;
+        std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
 
 };
 }

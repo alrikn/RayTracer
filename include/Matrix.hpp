@@ -22,7 +22,8 @@ class Matrix
     private:
         Math::Vector3d colorFromShape(Color color) const;
         std::vector<std::shared_ptr<IShape>> _objects;
-        std::vector<std::shared_ptr<ILight>> _lights;
+        //std::vector<std::shared_ptr<ILight>> _lights; i am usnure if there needs to be more than one lighting at the same time. for now, with just a sngle type it should be more than enough
+        std::shared_ptr<ILight> _light;
     public:
         Matrix() = default;
         ~Matrix() = default;

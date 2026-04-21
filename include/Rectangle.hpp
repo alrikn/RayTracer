@@ -9,7 +9,9 @@
     #define INCLUDED_RECTANGLE_HPP
 
 #include "Ashape.hpp"
+#include "IShape.hpp"
 #include "Vector3d.hpp"
+#include <optional>
 namespace RayTracer {
 
 
@@ -26,7 +28,7 @@ class Rectangle : public Ashape
         Math::Vector3d bottom_side; //represents the vector from bottom left corner to bottom right corner
         Math::Vector3d left_side; //represents the vector from bottom left corner to top left corner
 
-        bool hits(const RayTracer::Ray& ray) const override;
+        std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
 };
 }
 

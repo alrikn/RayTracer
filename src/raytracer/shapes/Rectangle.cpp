@@ -6,13 +6,15 @@
 */
 
 #include "Rectangle.hpp"
+#include "IShape.hpp"
+#include <optional>
 
 
 //a rectangle is technically not a shape, but we treat it as one
 
 namespace RayTracer {
-bool Rectangle::hits(const RayTracer::Ray& ray) const
+std::optional<HitRecord> Rectangle::hits(const RayTracer::Ray& ray) const
 {
-    return false; //todo later
+    return std::nullopt; //todo later
 }
 }

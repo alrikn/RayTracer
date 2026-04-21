@@ -12,14 +12,14 @@
 
 namespace Math {
 
-Point3d operator+(const Point3d &lhs, const Point3d &rhs)
+Vector3d operator+(const Point3d &lhs, const Point3d &rhs)
 {
-    return Point3d(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+    return Vector3d(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
 }
 
-Point3d operator-(const Point3d &lhs, const Point3d &rhs)
+Vector3d operator-(const Point3d &lhs, const Point3d &rhs)
 {
-    return Point3d(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+    return Vector3d(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 }
 
 Point3d operator+(const Point3d &lhs, const Vector3d &rhs)

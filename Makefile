@@ -29,9 +29,10 @@ CONVERT_OBJ = $(CONVERT:.cpp=.o)
 OBJ = $(SRC:.cpp=.o)
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -g
+CXXFLAGS_CONVERT = -std=c++20 -w
 CPPFLAGS = -I include
 
-all: $(NAME)
+all: $(NAME) convert
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ)
@@ -39,8 +40,10 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+$(CONVERT_OBJ): CXXFLAGS = $(CXXFLAGS_CONVERT)
+
 $(CONVERT_NAME): $(CONVERT_OBJ)
-	$(CXX) -o $(CONVERT_NAME) $(CONVERT_OBJ)
+	$(CXX) $(CXXFLAGS_CONVERT) -o $(CONVERT_NAME) $(CONVERT_OBJ)
 
 convert: $(CONVERT_NAME)
 

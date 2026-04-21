@@ -67,6 +67,16 @@ void Vector3d::rotateZ(double angle)
     this->y = y;
 }
 
+void Vector3d::normalize()
+{
+    double len = length();
+    if (len > 0) {
+        x /= len;
+        y /= len;
+        z /= len;
+    }
+}
+
 
 /*operator overloading*/
 Vector3d operator+(const Vector3d &lhs, const Vector3d &rhs)
