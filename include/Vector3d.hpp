@@ -26,6 +26,7 @@ class Vector3d
 
         double length() const;
 
+        //dot product of this vector with another vector
         double dot(const Vector3d &other) const;
 
         /*operator overloading*/

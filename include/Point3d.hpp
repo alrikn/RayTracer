@@ -29,6 +29,9 @@ class Point3d
 };
 
 /*operator overloading*/
+Point3d operator+(const Point3d &lhs, const Point3d &rhs);
+Point3d operator-(const Point3d &lhs, const Point3d &rhs);
+
 Point3d operator+(const Point3d &lhs, const Vector3d &rhs);
 Point3d operator-(const Point3d &lhs, const Vector3d &rhs);
 
