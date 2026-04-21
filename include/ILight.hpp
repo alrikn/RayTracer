@@ -14,11 +14,11 @@
 namespace RayTracer {
 
 
-class Ilight
+class ILight
 {
     protected:
     public:
-        virtual ~Ilight() = default;
+        virtual ~ILight() = default;
         //the intensity should take as input the point being shaded, the normal at that point, and the direction to the light source
         virtual double intensity(RayTracer::HitRecord hit) = 0;
 };
