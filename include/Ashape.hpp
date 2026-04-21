@@ -21,11 +21,12 @@ class Ashape : public IShape
 {
     private:
     protected:
-        Math::Point3d center;
     public:
         Ashape();
         Ashape(const Math::Point3d& center) : center(center) {};
         ~Ashape() = default;
+
+        Math::Point3d center;
 
 };
 
