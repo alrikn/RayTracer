@@ -8,6 +8,9 @@
 #include "Vector3d.hpp"
 #include <cmath>
 
+namespace Math {
+
+
 
 
 Vector3d::Vector3d(double x, double y, double z)
@@ -97,4 +100,5 @@ Vector3d& Vector3d::operator/=(double rhs)
 {
     *this = *this / rhs;
     return *this;
+}
 }

@@ -8,20 +8,21 @@
 #ifndef INCLUDED_VECTOR3D_HPP
     #define INCLUDED_VECTOR3D_HPP
 
-#include <iostream>
-
+namespace Math
+{
 class Vector3d
 {
     private:
     protected:
     public:
+        Vector3d() = default;
         Vector3d(double x, double y, double z);
         ~Vector3d() = default;
 
 
-        double x;
-        double y;
-        double z;
+        double x = 0;
+        double y = 0;
+        double z = 0;
 
         double length() const;
 
@@ -47,6 +48,6 @@ Vector3d operator/(const Vector3d &lhs, const Vector3d &rhs);
 Vector3d operator*(const Vector3d &lhs, double rhs);
 Vector3d operator/(const Vector3d &lhs, double rhs);
 
-
+}
 
 #endif

@@ -1,0 +1,8 @@
+*.so
+*.o
+*.out
+*.a
+*.txt
+*.log
+*.obj
+*test*
