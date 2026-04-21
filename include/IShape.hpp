@@ -10,8 +10,8 @@
 
 #include "Ray.hpp"
 #include "Vector3d.hpp"
-#include <iostream>
 #include <optional>
+#include <unordered_map>
 namespace RayTracer {
 
 //these be a few colors shapes can be at
@@ -20,6 +20,20 @@ enum Color {
     GREEN,
     BLUE,
     WHITE
+};
+
+//colour fromshape:
+const Math::Vector3d RED_COLOR(255, 0, 0);
+const Math::Vector3d GREEN_COLOR(0, 255, 0);
+const Math::Vector3d BLUE_COLOR(0, 0, 255);
+const Math::Vector3d WHITE_COLOR(255, 255, 255);
+
+//we make an unoredered map to convert from the enum to the actual color vector
+const std::unordered_map<Color, Math::Vector3d> COLOR_MAP = {
+    {RED, RED_COLOR},
+    {GREEN, GREEN_COLOR},
+    {BLUE, BLUE_COLOR},
+    {WHITE, WHITE_COLOR}
 };
 
 /*

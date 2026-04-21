@@ -19,6 +19,8 @@ SRC = main.cpp	\
 	src/raytracer/shapes/Rectangle.cpp	\
 	src/raytracer/shapes/Sphere.cpp	\
 	src/raytracer/camera.cpp	\
+	src/raytracer/Matrix.cpp	\
+	src/raytracer/lights/AmbientLight.cpp	\
 
 CONVERT = convert/convert_ppm.cpp
 #tiny program to convert ppm to png, not used in the raytracer but needs to be done as sparate binary

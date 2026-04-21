@@ -11,7 +11,6 @@
 #include "Point3d.hpp"
 #include "Ray.hpp"
 #include "Rectangle.hpp"
-#include <iostream>
 
 namespace RayTracer {
 

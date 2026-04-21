@@ -9,7 +9,6 @@
     #define INCLUDED_ILIGHT_HPP
 
 #include "IShape.hpp"
-#include <iostream>
 
 namespace RayTracer {
 

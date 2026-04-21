@@ -84,7 +84,7 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
     hit.distance = k;
     hit.point = point;
     hit.normal = normal;
-    hit.color = Math::Vector3d(255, 0, 0); // for now we can just return red for the color of the sphere. later we can add a color property to the sphere and return that instead
+    hit.color = COLOR_MAP.at(getColor());
     return hit;
 }
 }
