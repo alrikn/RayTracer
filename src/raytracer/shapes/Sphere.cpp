@@ -42,7 +42,7 @@ this is a quadratic equation, we can solve it using the discriminant:
 D = B^2 - 4 * A * C
 
 */
-bool Sphere::hits(RayTracer::Ray ray) const
+bool Sphere::hits(const RayTracer::Ray& ray) const
 {
     //first we have to shift the center
     Math::Point3d oc_point = ray.origin - center;
