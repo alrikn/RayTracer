@@ -20,6 +20,10 @@ SRC = main.cpp	\
 	src/raytracer/shapes/Sphere.cpp	\
 	src/raytracer/camera.cpp	\
 
+CONVERT = convert/convert_ppm.cpp
+#tiny program to convert ppm to png, not used in the raytracer but needs to be done as sparate binary
+CONVERT_NAME = ppm_to_png
+CONVERT_OBJ = $(CONVERT:.cpp=.o)
 
 
 OBJ = $(SRC:.cpp=.o)
@@ -35,10 +39,15 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+$(CONVERT_NAME): $(CONVERT_OBJ)
+	$(CXX) -o $(CONVERT_NAME) $(CONVERT_OBJ)
+
+convert: $(CONVERT_NAME)
+
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(CONVERT_NAME)
 
 re: fclean all

@@ -9,3 +9,5 @@
 *.tmp
 *.ppm
 raytracer
+ppm_to_png
+*.png
