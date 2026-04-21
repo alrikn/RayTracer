@@ -8,7 +8,6 @@
 #ifndef INCLUDED_POINT3D_HPP
     #define INCLUDED_POINT3D_HPP
 
-#include "Vector3d.hpp"
 namespace Math
 {
 
@@ -29,7 +28,9 @@ class Point3d
 
 };
 
-
+/*operator overloading*/
+Point3d operator+(const Point3d &lhs, const Vector3d &rhs);
+Point3d operator-(const Point3d &lhs, const Vector3d &rhs);
 
 }
 
