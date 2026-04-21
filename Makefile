@@ -32,7 +32,7 @@ OBJ = $(SRC:.cpp=.o)
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -g
 CXXFLAGS_CONVERT = -std=c++20 -w
-CPPFLAGS = -I include
+CPPFLAGS = -I include -I include/Shape -I include/Light -I include/Math
 
 all: $(NAME) convert
 
