@@ -29,7 +29,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray) const
 
 Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 {
-    std::optional<HitRecord> closest_hit;
+    std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
     double closest_distance = std::numeric_limits<double>::infinity();
 
 
@@ -37,7 +37,6 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
         auto hit = object->hits(ray);
         if (hit.has_value() && (hit->distance > epsilon) && (hit->distance < closest_distance)) {
             hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
-            //rn we are not using this because the _light is perfroming calculations on it
             closest_hit = hit;
             closest_distance = hit->distance;
         }
@@ -50,7 +49,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     //when we have a vector of light libs well loop over them but for now
     Math::Vector3d light_contribution = _light->intensity(*closest_hit, _objects); //get the light contribution from the light source
 
-    Math::Vector3d object_color = closest_hit->color * light_contribution; //combine the object color with the light contribution to get the final color at the hit point
+    Math::Vector3d object_color; //combine the object color with the light contribution to get the final color at the hit point
     //now we clamp it to 255 proportinally
     object_color = light_contribution * (closest_hit->color / 255.0) * brightness;
 
@@ -63,7 +62,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     incoming_ray_dir.normalize();
     Math::Vector3d normal = closest_hit->normal;
     normal.normalize();
-    Math::Vector3d reflected_dir = incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal); //calculate the reflected ray direction
+    Math::Vector3d reflected_dir = incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal); //calculate the reflected ray direction (making it bounce)
     reflected_dir.normalize();
 
     //now we create the reflected ray and trace it to get the color contribution from the reflected ray
@@ -72,7 +71,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 
     //we really need a reflectivity value for the objects but oh well
 
-    Math::Vector3d result_color = object_color + reflected_color; //combine the object color and the reflected color contribution
+    Math::Vector3d result_color = object_color + (reflected_color * 0.5); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
     return (result_color); //combine the object color and the reflected color contribution
 }
 
@@ -89,8 +88,8 @@ void write_color(const Math::Vector3d &color, std::ostream &output)
 void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     output << "P3\n" << width << " " << height << "\n255\n";
-    for (int j = height - 1; j >= 0; --j) {
-        for (int i = 0; i < width; ++i) {
+    for (int j = height - 1; j >= 0; j--) {
+        for (int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
