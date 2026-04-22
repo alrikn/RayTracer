@@ -53,7 +53,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     //when we have a vector of light libs well loop over them but for now
     Math::Vector3d light_contribution = _light->intensity(*closest_hit, _objects); //get the light contribution from the light source
 
-    Math::Vector3d object_color = closest_hit->color * light_contribution; //combine the object color with the light contribution to get the final color at the hit point
+    Math::Vector3d object_color = light_contribution; //combine the object color with the light contribution to get the final color at the hit point
     if (depth >= max_depth) {
         return object_color; //return the light contribution if we've reached the maximum recursion depth
     }
