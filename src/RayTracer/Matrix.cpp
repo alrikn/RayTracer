@@ -29,9 +29,6 @@ Math::Vector3d Matrix::traceRay(const Ray &ray) const
 
 Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 {
-    const int max_depth = 4; //max recursion
-    const double epsilon = 1e-4; //small value to prevent selfintersection
-
     std::optional<HitRecord> closest_hit;
     double closest_distance = std::numeric_limits<double>::infinity();
 
@@ -53,7 +50,10 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     //when we have a vector of light libs well loop over them but for now
     Math::Vector3d light_contribution = _light->intensity(*closest_hit, _objects); //get the light contribution from the light source
 
-    Math::Vector3d object_color = light_contribution; //combine the object color with the light contribution to get the final color at the hit point
+    Math::Vector3d object_color = closest_hit->color * light_contribution; //combine the object color with the light contribution to get the final color at the hit point
+    //now we clamp it to 255 proportinally
+    object_color = light_contribution * (closest_hit->color / 255.0) * brightness;
+
     if (depth >= max_depth) {
         return object_color; //return the light contribution if we've reached the maximum recursion depth
     }
@@ -72,8 +72,18 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 
     //we really need a reflectivity value for the objects but oh well
 
-    //maybe its a + here not sure
-    return (object_color + reflected_color); //combine the object color and the reflected color contribution
+    Math::Vector3d result_color = object_color + reflected_color; //combine the object color and the reflected color contribution
+    return (result_color); //combine the object color and the reflected color contribution
+}
+
+void write_color(const Math::Vector3d &color, std::ostream &output)
+{
+    int r = static_cast<int>(color.x);
+    int g = static_cast<int>(color.y);
+    int b = static_cast<int>(color.z);
+    if (r > 255 || g > 255 || b > 255)
+        throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
+    output << r << " " << g << " " << b << "\n";
 }
 
 void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
@@ -85,7 +95,7 @@ void Matrix::render(const Camera &camera, int width, int height, std::ostream &o
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
             Math::Vector3d color = traceRay(ray);
-            output << static_cast<int>(color.x) << " " << static_cast<int>(color.y) << " " << static_cast<int>(color.z) << "\n";
+            write_color(color, output);
         }
     }
 }

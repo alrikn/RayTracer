@@ -23,8 +23,12 @@ class Matrix
         std::vector<std::shared_ptr<IShape>> _objects;
         //std::vector<std::shared_ptr<ILight>> _lights; i am usnure if there needs to be more than one lighting at the same time. for now, with just a sngle type it should be more than enough
         std::shared_ptr<ILight> _light;
+        double brightness = 1.0; //global brightness. max is one, min is 0. it just touches final color values, doesn't touch lights.
+
+        const int max_depth = 4; //max recursion
+        const double epsilon = 1e-4; //small value to prevent selfintersection
     public:
-        Matrix() = default;
+        Matrix(double brightness = 0.9) : brightness(brightness) {}
         ~Matrix() = default;
 
         void addObject(const std::shared_ptr<IShape> &object);
