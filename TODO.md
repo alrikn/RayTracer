@@ -7,7 +7,7 @@
 - [x] make a enum color to vector
 - [ ] the matrix is a scene, so we should rename that class
 - [ ] no way ambient is that simple, there has to be more to it
-- [ ] make planes (not the flying kind, the surface kind)
+- [x] make planes (not the flying kind, the surface kind)
 
 
 # BUGS

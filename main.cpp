@@ -8,7 +8,9 @@
 #include "AmbientLight.hpp"
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
+#include "IShape.hpp"
 #include "Matrix.hpp"
+#include "Plane.hpp"
 #include "Rectangle.hpp"
 #include "Ashape.hpp"
 #include "Sphere.hpp"
@@ -56,19 +58,32 @@ void testing_func()
     small->setColor(RayTracer::WHITE);
     scene.addObject(small);
 
-    // --- Ground (big sphere trick) ---
-    //auto ground = std::make_shared<RayTracer::Sphere>(
-    //    Math::Point3d(0, -101, -1), 100);
-    //ground->setColor(RayTracer::YELLOW);
-    //scene.addObject(ground);
+    auto ground = std::make_shared<RayTracer::Plane>(
+        Math::Vector3d(0, 1, 0),      // upward normal
+        Math::Point3d(0, -0.5, 0)   // point on plane
+    );
+    ground->setColor(RayTracer::WHITE);
+    scene.addObject(ground);
 
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
     //scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
 
+    //Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};
+    //Camera(const Math::Point3d& origin, const Rectangle& screen) : origin(origin), screen(screen) {};
+
+    RayTracer::Camera camera(
+        Math::Point3d(0, 1, 1), // move camera up and slightly back
+    RayTracer::Rectangle(
+        Math::Point3d(-3, -1.5, -1), // shift screen downward
+        Math::Vector3d(6, 0, 0),
+        Math::Vector3d(0, 3, 0)
+        )
+    );
+
     // --- Render ---
-    scene.render(RayTracer::Camera(), x_axis, y_axis, std::cout);
+    scene.render(camera, x_axis, y_axis, std::cout);
 }
 
 int main()
