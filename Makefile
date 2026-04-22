@@ -16,11 +16,12 @@ NAME = raytracer
 SRC = main.cpp	\
 	src/positions/Vector3d.cpp	\
 	src/positions/Point3d.cpp	\
-	src/raytracer/shapes/Rectangle.cpp	\
-	src/raytracer/shapes/Sphere.cpp	\
-	src/raytracer/camera.cpp	\
-	src/raytracer/Matrix.cpp	\
-	src/raytracer/lights/AmbientLight.cpp	\
+	src/RayTracer/shapes/Rectangle.cpp	\
+	src/RayTracer/shapes/Sphere.cpp	\
+	src/RayTracer/camera.cpp	\
+	src/RayTracer/Matrix.cpp	\
+	src/RayTracer/lights/DirectionalLight.cpp	\
+	#src/RayTracer/lights/AmbientLight.cpp	\
 
 CONVERT = convert/convert_ppm.cpp
 #tiny program to convert ppm to png, not used in the raytracer but needs to be done as sparate binary
