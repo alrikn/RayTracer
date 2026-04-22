@@ -57,15 +57,15 @@ void testing_func()
     scene.addObject(small);
 
     // --- Ground (big sphere trick) ---
-    auto ground = std::make_shared<RayTracer::Sphere>(
-        Math::Point3d(0, -101, -1), 100);
-    ground->setColor(RayTracer::YELLOW);
-    scene.addObject(ground);
+    //auto ground = std::make_shared<RayTracer::Sphere>(
+    //    Math::Point3d(0, -101, -1), 100);
+    //ground->setColor(RayTracer::YELLOW);
+    //scene.addObject(ground);
 
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
-    //scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8)); //crashes
+    //scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
 
     // --- Render ---
     scene.render(RayTracer::Camera(), x_axis, y_axis, std::cout);

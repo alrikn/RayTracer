@@ -27,6 +27,12 @@ Math::Vector3d Matrix::traceRay(const Ray &ray) const
     return traceRay(ray, 0);
 }
 
+double clamp_color(double x)
+{
+    return std::max(0.0, std::min(255.0, x));
+}
+
+
 Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
@@ -71,7 +77,9 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
 
     //we really need a reflectivity value for the objects but oh well
 
+    //TODO; find smth better instead of an addirion here.
     Math::Vector3d result_color = object_color + (reflected_color * 0.5); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
+    result_color = Math::Vector3d(clamp_color(result_color.x), clamp_color(result_color.y), clamp_color(result_color.z));
     return (result_color); //combine the object color and the reflected color contribution
 }
 
