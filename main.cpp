@@ -34,7 +34,7 @@ int main()
     sphere1->setColor(RayTracer::RED);
     scene.addObject(sphere1);
 
-    scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.7, Math::Vector3d(255, 255, 255)));
+    scene.addLight(std::make_shared<RayTracer::DirectionalLight>(Math::Vector3d(-1, -1, -1), 0.8));
 
     scene.render(RayTracer::Camera(), x_axis, y_axis, std::cout);
 }

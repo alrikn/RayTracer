@@ -73,7 +73,7 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     //we really need a reflectivity value for the objects but oh well
 
     //maybe its a + here not sure
-    return object_color * reflected_color; //combine the object color and the reflected color contribution
+    return (object_color + reflected_color); //combine the object color and the reflected color contribution
 }
 
 void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
