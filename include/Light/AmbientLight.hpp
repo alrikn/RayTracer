@@ -22,7 +22,7 @@ class AmbientLight : public ILight
         AmbientLight(double intensity) : _intensity(intensity) {};
         ~AmbientLight() = default;
 
-        double intensity(RayTracer::HitRecord hit) override;
+        //double intensity(RayTracer::HitRecord hit) override;
 
 };
 }
