@@ -26,6 +26,7 @@ void write_color(const Math::Vector3d &color)
     std::cout << r << " " << g << " " << b << "\n";
 }
 
+//push test
 //testing made entirely by gibbidy. sue me
 void testing_func()
 {
