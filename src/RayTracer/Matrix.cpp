@@ -18,7 +18,7 @@ void Matrix::addObject(const std::shared_ptr<IShape> &object)
 
 void Matrix::addLight(const std::shared_ptr<ILight> &light)
 {
-    _light = light;
+    _lights.push_back(light);
 
 }
 
@@ -52,7 +52,9 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
         return Math::Vector3d(0, 0, 0); //black background if we hit nothing
     }
     //when we have a vector of light libs well loop over them but for now
-    Math::Vector3d light_contribution = _light->intensity(*closest_hit, _objects); //get the light contribution from the light source
+    Math::Vector3d light_contribution(0, 0, 0);
+    for (const auto& light : _lights)
+        light_contribution += light->intensity(*closest_hit, _objects);
 
     Math::Vector3d object_color; //combine the object color with the light contribution to get the final color at the hit point
     //now we clamp it to 255 proportinally
