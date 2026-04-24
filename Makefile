@@ -23,6 +23,7 @@ SRC = main.cpp	\
 	src/RayTracer/Matrix.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
+	src/RayTracer/lights/SpecularLight.cpp   \
 
 CONVERT = convert/convert_ppm.cpp
 #tiny program to convert ppm to png, not used in the raytracer but needs to be done as sparate binary
