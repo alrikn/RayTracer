@@ -43,6 +43,8 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
         auto hit = object->hits(ray);
         if (hit.has_value() && (hit->distance > epsilon) && (hit->distance < closest_distance)) {
             hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
+            hit->shininess = object->getShininess(); //set the shininess of the hit record to the shininess of the object that was hit
+            hit->specular_strength = object->getSpecularStrength(); //set the specular strength of the hit record to the specular strength of the object that was hit
             closest_hit = hit;
             closest_distance = hit->distance;
         }
@@ -51,6 +53,9 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     if (!closest_hit.has_value()) {
         return Math::Vector3d(0, 0, 0); //black background if we hit nothing
     }
+    Math::Vector3d view_dir = ray.direction; 
+    view_dir.normalize();
+    closest_hit->view_dir = view_dir * -1; //we want the view direction to point from the hit point back towards the camera, so we negate the ray direction
 
     //when we have a vector of light libs well loop over them but for now
     Math::Vector3d light_contribution = _light->intensity(*closest_hit, _objects); //get the light contribution from the light source
