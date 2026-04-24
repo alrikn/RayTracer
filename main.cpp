@@ -68,7 +68,7 @@ void testing_func()
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
-    //scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
+    scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
 
     //Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};
     //Camera(const Math::Point3d& origin, const Rectangle& screen) : origin(origin), screen(screen) {};

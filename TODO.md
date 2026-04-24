@@ -8,7 +8,19 @@
 - [ ] the matrix is a scene, so we should rename that class
 - [ ] no way ambient is that simple, there has to be more to it
 - [x] make planes (not the flying kind, the surface kind)
-
+- [ ] make a save system (also design patterns for this)
+- [ ] shared object handler with dlloader (can )
+- [ ] implement all of the shapes
+- [ ] specular lighting
+- [ ] understand drop shadow
+- [ ] Phong reflection (thats just adding directional specular and ambient)
+- [ ] reflaction
+- [ ] make option for planes to be chessboards
+- [ ] look into what antialising
+- [ ] look into supersampling
+- [ ] look into multithreading
+- [ ] make unit tests + functional tests (dani does this)
+- [ ] implement camera simplification, add to make camer rectangle depend on scene detailing given to render.
 
 # BUGS
 ## (or supected bugs, since i don't always know what i am supposed to look for)
