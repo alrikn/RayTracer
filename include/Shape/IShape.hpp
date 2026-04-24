@@ -53,6 +53,9 @@ struct HitRecord {
     Math::Point3d point; //the point of intersection
     Math::Vector3d normal; //the normal vector at the point of intersection, which is used for lighting calculations
     Math::Vector3d color; //the color of the shape at the point of intersection, which can be used for shading and rendering
+    Math::Vector3d view_dir; //the direction from the hit point back towards the camera, which is used for lighting calculations, especially for specular highlights
+    double shininess; //how shiny the surface is, which affects how it reflects light and contributes to specular highlights
+    double specular_strength; //how strong the specular highlights are, which affects how much the surface reflects light in a mirror-like way
 };
 
 class IShape
@@ -65,6 +68,10 @@ class IShape
         virtual std::optional<HitRecord> hits(const RayTracer::Ray& ray) const = 0; //this should really return a hit record, but for now we can just return a bool to indicate if it hit or not
         virtual void setColor(Color color) = 0;
         virtual Color getColor() const = 0;
+        virtual void setShininess(double s) = 0;
+        virtual double getShininess() const = 0;
+        virtual void setSpecularStrength(double s) = 0;
+        virtual double getSpecularStrength() const = 0;
 };
 }
 #endif
