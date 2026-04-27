@@ -68,7 +68,7 @@ void testing_func()
     scene.addObject(ground);
 
     // --- Light ---
-     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
+    scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
     scene.addLight(std::make_shared<RayTracer::SpecularLight>(
         Math::Vector3d(1, -1, -1), 1.0, Math::Point3d(0, 1, 1), 8.0, 1.0));
