@@ -106,6 +106,7 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
     int b = static_cast<int>(color.z);
+
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";

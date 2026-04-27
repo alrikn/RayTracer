@@ -40,6 +40,10 @@ class Ashape : public IShape
             return reflectivity;
         }
         void setReflectivity(double reflectivity) override {
+            if (reflectivity < 0.0)
+                reflectivity = 0.0;
+            if (reflectivity > 1.0)
+                reflectivity = 1.0;
             this->reflectivity = reflectivity;
         }
 };
