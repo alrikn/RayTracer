@@ -1,3 +1,9 @@
+/*
+** EPITECH PROJECT, 2026
+** temp_raytracer
+** File description:
+** SpecularLight
+*/
 #include "SpecularLight.hpp"
 #include "Ray.hpp"
 #include "Vector3d.hpp"
