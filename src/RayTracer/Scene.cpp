@@ -62,6 +62,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
             hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
             closest_hit = hit;
             closest_distance = hit->distance;
+            hit->Ray_direction = ray.direction; //set the ray direction in the hit record for later use in lighting calculations
         }
     }
 

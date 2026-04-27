@@ -41,6 +41,7 @@ std::optional<HitRecord> Plane::hits(const RayTracer::Ray& ray) const
     hit.distance = t;
     hit.point = ray.origin + ray.direction * t;
     hit.normal = final_normal;
+    hit.Ray_direction = ray.direction;
     return hit;
 }
 }
