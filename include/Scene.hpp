@@ -30,7 +30,7 @@ class Scene
         /*helper funcs*/
         Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions) const;
         double clamp_color(double x) const;
-        std::string write_color(const Math::Vector3d &color, std::string &output) const;
+        void write_color(const Math::Vector3d &color, std::string &output) const;
     public:
         Scene(double brightness = 0.9) : brightness(brightness) {}
         ~Scene() = default;
