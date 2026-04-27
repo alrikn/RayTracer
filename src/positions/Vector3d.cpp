@@ -67,7 +67,7 @@ void Vector3d::rotateZ(double angle)
     this->y = y;
 }
 
-void Vector3d::normalize()
+void Vector3d::normalizeSelf()
 {
     double len = length();
     if (len > 0) {
@@ -75,6 +75,15 @@ void Vector3d::normalize()
         y /= len;
         z /= len;
     }
+}
+
+Vector3d Vector3d::normalize() const
+{
+    double len = length();
+    if (len > 0) {
+        return Vector3d(x / len, y / len, z / len);
+    }
+    return *this; //if length is zero, return the original vector (can't normalize a zero vector)
 }
 
 

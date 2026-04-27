@@ -8,6 +8,7 @@
 #include "Scene.hpp"
 #include "IShape.hpp"
 #include "Vector3d.hpp"
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <vector>
@@ -86,12 +87,9 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     }
 
     //here we calculate the angle of the reflected ray
-    Math::Vector3d incoming_ray_dir = ray.direction;
-    incoming_ray_dir.normalize();
-    Math::Vector3d normal = closest_hit->normal;
-    normal.normalize();
-    Math::Vector3d reflected_dir = incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal); //calculate the reflected ray direction (making it bounce)
-    reflected_dir.normalize();
+    Math::Vector3d incoming_ray_dir = ray.direction.normalize(); //normalize the incoming ray direction
+    Math::Vector3d normal = closest_hit->normal.normalize();
+    Math::Vector3d reflected_dir = (incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal)).normalize(); //calculate the reflected ray direction (making it bounce)
 
     //now we create the reflected ray and trace it to get the color contribution from the reflected ray
     Ray reflected_ray(closest_hit->point + normal * epsilon, reflected_dir); //offset
@@ -118,8 +116,16 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
-    //output << "P3\n" << width << " " << height << "\n255\n";
+    
+    int percentage = 0;
+    int new_percentage = 0;
     for (int j = height - 1; j >= 0; j--) {
+        new_percentage = (height - j) * 100 / height;
+        if (new_percentage != percentage) {
+            percentage = new_percentage;
+            std::cerr << "\rRendering: " << percentage << "%";
+        }
+
         for (int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);

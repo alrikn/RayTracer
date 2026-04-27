@@ -77,8 +77,7 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
     }
     Math::Point3d point = ray.origin + ray.direction * k;
 
-    Math::Vector3d normal = point - center;
-    normal.normalize();
+    Math::Vector3d normal = (point - center).normalize();
 
     HitRecord hit;
     hit.distance = k;
