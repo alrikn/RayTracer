@@ -56,6 +56,7 @@ struct HitRecord {
     Math::Point3d point; //the point of intersection
     Math::Vector3d normal; //the normal vector at the point of intersection, which is used for lighting calculations
     Math::Vector3d color; //the color of the shape at the point of intersection, which can be used for shading and rendering
+    Math::Vector3d incomingDirection; //the direction of the ray that hit the shape
 };
 
 class IShape

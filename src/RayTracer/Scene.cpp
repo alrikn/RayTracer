@@ -63,6 +63,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
             closest_hit = hit;
             closest_distance = hit->distance;
             closest_object = object.get();
+            hit->incomingDirection = ray.direction; //set the ray direction in the hit record for later use in lighting calculations
         }
     }
 
