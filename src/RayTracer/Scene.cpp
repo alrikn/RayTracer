@@ -54,7 +54,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
     double closest_distance = std::numeric_limits<double>::infinity();
-
+    IShape* closest_object = nullptr; //we need this to get the color of the object that was hit
 
     for (const auto& object : _objects) {
         auto hit = object->hits(ray);
@@ -62,6 +62,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
             hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
             closest_hit = hit;
             closest_distance = hit->distance;
+            closest_object = object.get();
         }
     }
 
@@ -79,7 +80,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 
     Math::Vector3d light_at_point = light_contribution * brightness;
 
-    if (depth >= max_depth) {
+    if (depth >= max_depth || closest_object->getReflectivity() <= 0.0) {
         return light_at_point; //return the light contribution if we've reached the maximum recursion depth
     }
 
@@ -95,7 +96,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     //we really need a reflectivity value for the objects but oh well
 
     //TODO; find smth better instead of an addirion here.
-    Math::Vector3d result_color = light_at_point + (reflected_color * 0.5); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
+    Math::Vector3d result_color = light_at_point + (reflected_color * closest_object->getReflectivity()); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
     result_color = Math::Vector3d(clamp_color(result_color.x), clamp_color(result_color.y), clamp_color(result_color.z));
     return (result_color); //combine the object color and the reflected color contribution
 }

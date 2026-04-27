@@ -65,6 +65,8 @@ class IShape
         virtual std::optional<HitRecord> hits(const RayTracer::Ray& ray) const = 0; //this should really return a hit record, but for now we can just return a bool to indicate if it hit or not
         virtual void setColor(Color color) = 0;
         virtual Color getColor() const = 0;
+        virtual double getReflectivity() const = 0;
+        virtual void setReflectivity(double reflectivity) = 0;
 };
 }
 #endif
