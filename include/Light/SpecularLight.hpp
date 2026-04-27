@@ -1,3 +1,9 @@
+/*
+** EPITECH PROJECT, 2026
+** raytracer
+** File description:
+** SpecularLight
+*/
 #ifndef INCLUDED_SPECULARLIGHT_HPP
     #define INCLUDED_SPECULARLIGHT_HPP
 
