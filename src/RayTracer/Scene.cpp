@@ -29,12 +29,12 @@ Math::Vector3d Scene::traceRay(const Ray &ray) const
     return traceRay(ray, 0);
 }
 
-double clamp_color(double x)
+double Scene::clamp_color(double x) const
 {
     return std::max(0.0, std::min(255.0, x));
 }
 
-Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions)
+Math::Vector3d Scene::average_light(std::vector<Math::Vector3d> light_contributions) const
 {
     if (light_contributions.empty()) {
         return Math::Vector3d(0, 0, 0);
@@ -105,7 +105,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     return (result_color); //combine the object color and the reflected color contribution
 }
 
-void write_color(const Math::Vector3d &color, std::string &output)
+std::string Scene::write_color(const Math::Vector3d &color, std::string &output) const
 {
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
@@ -113,6 +113,7 @@ void write_color(const Math::Vector3d &color, std::string &output)
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
+    return output;
 }
 
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
@@ -125,7 +126,7 @@ void Scene::render(const Camera &camera, int width, int height, std::ostream &ou
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
             Math::Vector3d color = traceRay(ray);
-            write_color(color, _final_output);
+            _final_output = write_color(color, _final_output);
         }
     }
     output << _final_output;

@@ -26,6 +26,11 @@ class Scene
 
         const int max_depth = 4; //max recursion
         const double epsilon = 1e-4; //small value to prevent selfintersection
+
+        /*helper funcs*/
+        Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions) const;
+        double clamp_color(double x) const;
+        std::string write_color(const Math::Vector3d &color, std::string &output) const;
     public:
         Scene(double brightness = 0.9) : brightness(brightness) {}
         ~Scene() = default;
