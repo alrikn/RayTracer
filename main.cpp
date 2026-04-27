@@ -72,7 +72,7 @@ void testing_func()
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
     scene.addLight(std::make_shared<RayTracer::SpecularLight>(
-        Math::Vector3d(1, -1, -1), 1.0, Math::Point3d(0, 1, 1), 8.0, 1.0));
+        Math::Vector3d(-1, -1, -1), 1.0, 128.0, 1.0));
     scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
 
     //Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};

@@ -13,13 +13,12 @@
 namespace RayTracer {
 
   SpecularLight::SpecularLight(const Math::Vector3d &direction, double intensity,
-                                const Math::Point3d &camera_pos, double shininess,
-                                double specular_strength, const Math::Vector3d &color)
+                                double shininess, double specular_strength,
+                                const Math::Vector3d &color)
   {
       this->_direction = direction;
       this->_direction.normalizeSelf();
       this->_intensity = intensity;
-      this->_camera_pos = camera_pos;
       this->_shininess = shininess;
       this->_specular_strength = specular_strength;
       this->_color = color;
@@ -46,11 +45,7 @@ namespace RayTracer {
             return Math::Vector3d(0, 0, 0);
     }
 
-    Math::Vector3d view_dir(
-        _camera_pos.x - hit.point.x,
-        _camera_pos.y - hit.point.y,
-        _camera_pos.z - hit.point.z
-    );
+    Math::Vector3d view_dir = hit.incomingDirection * -1.0;
     view_dir.normalizeSelf();
 
     Math::Vector3d reflect_dir = hit.normal * 2.0 * hit.normal.dot(light_dir) - light_dir;
