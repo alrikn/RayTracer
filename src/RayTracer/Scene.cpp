@@ -50,12 +50,11 @@ Math::Vector3d Scene::average_light(std::vector<Math::Vector3d> light_contributi
     return sum;
 }
 
-
 Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
     double closest_distance = std::numeric_limits<double>::infinity();
-
+    IShape* closest_object = nullptr; //we need this to get the color of the object that was hit
 
     for (const auto& object : _objects) {
         auto hit = object->hits(ray);
@@ -63,6 +62,8 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
             hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
             closest_hit = hit;
             closest_distance = hit->distance;
+            closest_object = object.get();
+            hit->incomingDirection = ray.direction; //set the ray direction in the hit record for later use in lighting calculations
         }
     }
 
@@ -78,12 +79,10 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     }
     light_contribution = average_light(light_contributions);
 
-    Math::Vector3d object_color; //combine the object color with the light contribution to get the final color at the hit point
-    //now we clamp it to 255 proportinally
-    object_color = light_contribution * (closest_hit->color / 255.0) * brightness;
+    Math::Vector3d light_at_point = light_contribution * brightness;
 
-    if (depth >= max_depth) {
-        return object_color; //return the light contribution if we've reached the maximum recursion depth
+    if (depth >= max_depth || closest_object->getReflectivity() <= 0.0) {
+        return light_at_point; //return the light contribution if we've reached the maximum recursion depth
     }
 
     //here we calculate the angle of the reflected ray
@@ -98,7 +97,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     //we really need a reflectivity value for the objects but oh well
 
     //TODO; find smth better instead of an addirion here.
-    Math::Vector3d result_color = object_color + (reflected_color * 0.5); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
+    Math::Vector3d result_color = light_at_point + (reflected_color * closest_object->getReflectivity()); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
     result_color = Math::Vector3d(clamp_color(result_color.x), clamp_color(result_color.y), clamp_color(result_color.z));
     return (result_color); //combine the object color and the reflected color contribution
 }
@@ -108,6 +107,7 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
     int b = static_cast<int>(color.z);
+
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
@@ -116,7 +116,7 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
-    
+
     int percentage = 0;
     int new_percentage = 0;
     for (int j = height - 1; j >= 0; j--) {

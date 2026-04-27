@@ -65,6 +65,7 @@ void testing_func()
         Math::Point3d(0, -0.5, 0)   // point on plane
     );
     ground->setColor(RayTracer::WHITE);
+    ground->setReflectivity(0.15); //make the ground slightly reflective
     scene.addObject(ground);
 
     // --- Light ---

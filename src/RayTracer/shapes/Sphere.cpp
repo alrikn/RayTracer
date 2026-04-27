@@ -84,6 +84,7 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
     hit.point = point;
     hit.normal = normal;
     hit.color = COLOR_MAP.at(getColor());
+    hit.incomingDirection = ray.direction;
     return hit;
 }
 }
