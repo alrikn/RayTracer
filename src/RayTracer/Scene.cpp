@@ -50,7 +50,6 @@ Math::Vector3d Scene::average_light(std::vector<Math::Vector3d> light_contributi
     return sum;
 }
 
-
 Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
@@ -114,7 +113,7 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
-    
+
     int percentage = 0;
     int new_percentage = 0;
     for (int j = height - 1; j >= 0; j--) {

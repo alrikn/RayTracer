@@ -19,7 +19,7 @@ SRC = main.cpp	\
 	src/RayTracer/shapes/Rectangle.cpp	\
 	src/RayTracer/shapes/Sphere.cpp	\
 	src/RayTracer/shapes/Plane.cpp	\
-	src/RayTracer/camera.cpp	\
+	src/RayTracer/Camera.cpp	\
 	src/RayTracer/Scene.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
