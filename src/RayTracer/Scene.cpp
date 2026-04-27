@@ -70,8 +70,8 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     if (!closest_hit.has_value()) {
         return Math::Vector3d(0, 0, 0); //black background if we hit nothing
     }
-
     //when we have a vector of light libs well loop over them but for now
+
     Math::Vector3d light_contribution = Math::Vector3d(0, 0, 0);
     std::vector<Math::Vector3d> light_contributions;
     for (const auto& light : _lights) {

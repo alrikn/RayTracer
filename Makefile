@@ -23,6 +23,7 @@ SRC = main.cpp	\
 	src/RayTracer/Scene.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
+	src/RayTracer/lights/SpecularLight.cpp   \
 
 
 OBJ = $(SRC:.cpp=.o)

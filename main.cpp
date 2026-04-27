@@ -13,6 +13,7 @@
 #include "Plane.hpp"
 #include "Rectangle.hpp"
 #include "Ashape.hpp"
+#include "SpecularLight.hpp"
 #include "Sphere.hpp"
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
@@ -70,6 +71,8 @@ void testing_func()
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
         Math::Vector3d(-1, -1, -1), 0.8));
+    scene.addLight(std::make_shared<RayTracer::SpecularLight>(
+        Math::Vector3d(-1, -1, -1), 1.0, 128.0, 1.0));
     scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
 
     //Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};
