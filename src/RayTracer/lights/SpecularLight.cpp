@@ -10,7 +10,7 @@ namespace RayTracer {
                                 double specular_strength, const Math::Vector3d &color)
   {
       this->_direction = direction;
-      this->_direction.normalize();
+      this->_direction.normalizeSelf();
       this->_intensity = intensity;
       this->_camera_pos = camera_pos;
       this->_shininess = shininess;
@@ -26,7 +26,7 @@ namespace RayTracer {
         return Math::Vector3d(0, 0, 0);
 
     Math::Vector3d light_dir = _direction * -1.0;
-    light_dir.normalize();
+    light_dir.normalizeSelf();
 
     if (hit.normal.dot(light_dir) <= 0.0)
         return Math::Vector3d(0, 0, 0);
@@ -44,10 +44,10 @@ namespace RayTracer {
         _camera_pos.y - hit.point.y,
         _camera_pos.z - hit.point.z
     );
-    view_dir.normalize();
+    view_dir.normalizeSelf();
 
-    Math::Vector3d reflect_dir = light_dir - hit.normal * 2.0 * hit.normal.dot(light_dir);
-    reflect_dir.normalize();
+    Math::Vector3d reflect_dir = hit.normal * 2.0 * hit.normal.dot(light_dir) - light_dir;
+    reflect_dir.normalizeSelf();
 
     double spec_angle = std::max(reflect_dir.dot(view_dir), 0.0);
     double specular = std::pow(spec_angle, _shininess) * _specular_strength;
