@@ -39,7 +39,7 @@ Math::Vector3d DirectionalLight::intensity(const RayTracer::HitRecord& hit, cons
             return Math::Vector3d(0, 0, 0); //in shadow, no light contribution
         }
     }
-    return color * light_intensity * lambert; //return the light contribution based on the color, intensity, and lambertian reflectance
+    return color * light_intensity * lambert * (hit.color / 255.0); //return the light contribution based on the color, intensity, and lambertian reflectance
 
 }
 }
