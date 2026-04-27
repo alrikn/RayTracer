@@ -106,7 +106,7 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     return (result_color); //combine the object color and the reflected color contribution
 }
 
-std::string Scene::write_color(const Math::Vector3d &color, std::string &output) const
+void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 {
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
@@ -114,7 +114,6 @@ std::string Scene::write_color(const Math::Vector3d &color, std::string &output)
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
-    return output;
 }
 
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
@@ -135,7 +134,7 @@ void Scene::render(const Camera &camera, int width, int height, std::ostream &ou
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
             Math::Vector3d color = traceRay(ray);
-            _final_output = write_color(color, _final_output);
+            write_color(color, _final_output);
         }
     }
     output << _final_output;
