@@ -2,10 +2,10 @@
 ** EPITECH PROJECT, 2026
 ** temp_raytracer
 ** File description:
-** Matrix
+** Scene
 */
 
-#include "Matrix.hpp"
+#include "Scene.hpp"
 #include "IShape.hpp"
 #include "Vector3d.hpp"
 #include <limits>
@@ -13,18 +13,18 @@
 #include <vector>
 
 namespace RayTracer {
-void Matrix::addObject(const std::shared_ptr<IShape> &object)
+void Scene::addObject(const std::shared_ptr<IShape> &object)
 {
     _objects.push_back(object);
 }
 
-void Matrix::addLight(const std::shared_ptr<ILight> &light)
+void Scene::addLight(const std::shared_ptr<ILight> &light)
 {
     _lights.push_back(light);
 
 }
 
-Math::Vector3d Matrix::traceRay(const Ray &ray) const
+Math::Vector3d Scene::traceRay(const Ray &ray) const
 {
     return traceRay(ray, 0);
 }
@@ -50,7 +50,7 @@ Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions)
 }
 
 
-Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
+Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
     double closest_distance = std::numeric_limits<double>::infinity();
@@ -115,7 +115,7 @@ void write_color(const Math::Vector3d &color, std::string &output)
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
 }
 
-void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
+void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
     //output << "P3\n" << width << " " << height << "\n255\n";

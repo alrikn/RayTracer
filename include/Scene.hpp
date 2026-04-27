@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2026
 ** temp_raytracer
 ** File description:
-** Matrix
+** Scene
 */
 
-#ifndef INCLUDED_MATRIX_HPP
-    #define INCLUDED_MATRIX_HPP
+#ifndef INCLUDED_Scene_HPP
+    #define INCLUDED_Scene_HPP
 
 #include "ILight.hpp"
 #include "IShape.hpp"
@@ -17,7 +17,7 @@
 
 namespace RayTracer {
 
-class Matrix
+class Scene
 {
     private:
         std::vector<std::shared_ptr<IShape>> _objects;
@@ -27,8 +27,8 @@ class Matrix
         const int max_depth = 4; //max recursion
         const double epsilon = 1e-4; //small value to prevent selfintersection
     public:
-        Matrix(double brightness = 0.9) : brightness(brightness) {}
-        ~Matrix() = default;
+        Scene(double brightness = 0.9) : brightness(brightness) {}
+        ~Scene() = default;
 
         void addObject(const std::shared_ptr<IShape> &object);
         void addLight(const std::shared_ptr<ILight> &light);
