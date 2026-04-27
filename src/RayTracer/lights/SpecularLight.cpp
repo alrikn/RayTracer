@@ -7,6 +7,7 @@
 #include "SpecularLight.hpp"
 #include "Ray.hpp"
 #include "Vector3d.hpp"
+#include <algorithm>
 #include <cmath>
 
 namespace RayTracer {
