@@ -16,11 +16,11 @@ namespace RayTracer {
 class SpecularLight : public ILight
 {
     private:
-        Math::Vector3d _direction;
-        double _intensity = 1.0;
-        Math::Vector3d _color = Math::Vector3d(255, 255, 255);
-        double _shininess = 32.0;
-        double _specular_strength = 0.5;
+        Math::Vector3d _direction; //the direction the light is coming from (like a sun direction)
+        double _intensity = 1.0; //how strong the light is overall
+        Math::Vector3d _color = Math::Vector3d(255, 255, 255); //the color of the specular highlight (white by default)
+        double _shininess = 32.0; //the specular exponent — higher value means a smaller, sharper highlight
+        double _specular_strength = 0.5; //how much the specular highlight contributes to the final color
     public:
         SpecularLight(const Math::Vector3d &direction, double intensity = 1.0,
                       double shininess = 32.0, double specular_strength = 0.5,
