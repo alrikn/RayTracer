@@ -8,6 +8,7 @@
 #include "Scene.hpp"
 #include "IShape.hpp"
 #include "Vector3d.hpp"
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <vector>
@@ -119,8 +120,16 @@ std::string Scene::write_color(const Math::Vector3d &color, std::string &output)
 void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
-    //output << "P3\n" << width << " " << height << "\n255\n";
+    
+    int percentage = 0;
+    int new_percentage = 0;
     for (int j = height - 1; j >= 0; j--) {
+        new_percentage = (height - j) * 100 / height;
+        if (new_percentage != percentage) {
+            percentage = new_percentage;
+            std::cerr << "\rRendering: " << percentage << "%";
+        }
+
         for (int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);

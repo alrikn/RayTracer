@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build_and_test:
     if: github.repository == 'alrikn/RayTracer'
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker
@@ -28,12 +28,16 @@ jobs:
           fi
           echo "Executable found."
 
+      - name: Run tests
+        run: ./raytracer > output.ppm
+        timeout-minutes: 5 #if it can't be done in 5 minutes, it's bad and something has gone wrong
+
       - name: Clean
         if: always()
         run: make fclean
 
   push_to_mirror:
-    needs: build
+    needs: build_and_test
     if: github.repository == 'alrikn/RayTracer' && github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
 
