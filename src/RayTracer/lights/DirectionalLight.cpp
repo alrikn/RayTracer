@@ -11,10 +11,9 @@
 
 namespace RayTracer {
 
-DirectionalLight::DirectionalLight(const Math::Vector3d &direction, double light_intensity, const Math::Vector3d &color)
+DirectionalLight::DirectionalLight(const Math::Vector3d &new_direction, double light_intensity, const Math::Vector3d &color)
 {
-    this->direction = direction;
-    this->direction.normalize(); //we will have to make sure t has a length of one + make normalize return a value
+    this->direction = new_direction.normalize();
     this->light_intensity = light_intensity;
     this->color = color; //theoretically this is white, but if u want to make it more sun-like we can make it more yellow
 }
@@ -24,8 +23,7 @@ Math::Vector3d DirectionalLight::intensity(const RayTracer::HitRecord& hit, cons
     //epsilon 
     const double epsilon = 1e-4; //small value to prevent selfintersection
     //here we flip the direction (light source so it points back to the light)
-    Math::Vector3d light_dir = direction * -1; //direction from the hit point to the light source
-    light_dir.normalize();
+    Math::Vector3d light_dir = (direction * -1).normalize(); //direction from the hit point to the light source
 
     double lambert = std::max(hit.normal.dot(light_dir), 0.0); //lambertian reflectance
     //lambert just means that it checks if a surface is facing towards the light source or not. if 1 then perfectly facing, if 0 then perfectly facing away.

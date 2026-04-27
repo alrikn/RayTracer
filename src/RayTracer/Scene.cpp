@@ -87,12 +87,9 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     }
 
     //here we calculate the angle of the reflected ray
-    Math::Vector3d incoming_ray_dir = ray.direction;
-    incoming_ray_dir.normalize();
-    Math::Vector3d normal = closest_hit->normal;
-    normal.normalize();
-    Math::Vector3d reflected_dir = incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal); //calculate the reflected ray direction (making it bounce)
-    reflected_dir.normalize();
+    Math::Vector3d incoming_ray_dir = ray.direction.normalize(); //normalize the incoming ray direction
+    Math::Vector3d normal = closest_hit->normal.normalize();
+    Math::Vector3d reflected_dir = (incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal)).normalize(); //calculate the reflected ray direction (making it bounce)
 
     //now we create the reflected ray and trace it to get the color contribution from the reflected ray
     Ray reflected_ray(closest_hit->point + normal * epsilon, reflected_dir); //offset
