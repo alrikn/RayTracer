@@ -43,10 +43,11 @@ Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions)
     for (const auto& contribution : light_contributions) {
         sum += contribution;
     }
-    return sum / static_cast<double>(light_contributions.size());
+    sum.x = sum.x / static_cast<double>(light_contributions.size());
+    sum.y = sum.y / static_cast<double>(light_contributions.size());
+    sum.z = sum.z / static_cast<double>(light_contributions.size());
+    return sum;
 }
-
-
 
 
 Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
@@ -104,27 +105,30 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     return (result_color); //combine the object color and the reflected color contribution
 }
 
-void write_color(const Math::Vector3d &color, std::ostream &output)
+void write_color(const Math::Vector3d &color, std::string &output)
 {
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
     int b = static_cast<int>(color.z);
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
-    output << r << " " << g << " " << b << "\n";
+    output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
 }
 
 void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
-    output << "P3\n" << width << " " << height << "\n255\n";
+    std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
+    //output << "P3\n" << width << " " << height << "\n255\n";
     for (int j = height - 1; j >= 0; j--) {
         for (int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
             Math::Vector3d color = traceRay(ray);
-            write_color(color, output);
+            write_color(color, _final_output);
         }
     }
+    output << _final_output;
 }
+
 }

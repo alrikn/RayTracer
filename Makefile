@@ -24,32 +24,19 @@ SRC = main.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
 
-CONVERT = convert/convert_ppm.cpp
-#tiny program to convert ppm to png, not used in the raytracer but needs to be done as sparate binary
-CONVERT_NAME = ppm_to_png
-CONVERT_OBJ = $(CONVERT:.cpp=.o)
-
 
 OBJ = $(SRC:.cpp=.o)
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -g
-CXXFLAGS_CONVERT = -std=c++20 -w
 CPPFLAGS = -I include -I include/Shape -I include/Light -I include/Math
 
-all: $(NAME) convert
+all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
-
-$(CONVERT_OBJ): CXXFLAGS = $(CXXFLAGS_CONVERT)
-
-$(CONVERT_NAME): $(CONVERT_OBJ)
-	$(CXX) $(CXXFLAGS_CONVERT) -o $(CONVERT_NAME) $(CONVERT_OBJ)
-
-convert: $(CONVERT_NAME)
 
 clean:
 	rm -f $(OBJ) $(CONVERT_OBJ)
