@@ -9,7 +9,7 @@
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
 #include "IShape.hpp"
-#include "Matrix.hpp"
+#include "Scene.hpp"
 #include "Plane.hpp"
 #include "Rectangle.hpp"
 #include "Ashape.hpp"
@@ -26,13 +26,14 @@ void write_color(const Math::Vector3d &color)
     std::cout << r << " " << g << " " << b << "\n";
 }
 
+//push test
 //testing made entirely by gibbidy. sue me
 void testing_func()
 {
     int x_axis = 4000;
     int y_axis = 2000;
 
-    RayTracer::Matrix scene;
+    RayTracer::Scene scene;
 
     // --- Center sphere ---
     auto center = std::make_shared<RayTracer::Sphere>(
@@ -91,7 +92,7 @@ int main()
     int x_axis = 4000;
     int y_axis = 2000;
     /*
-    RayTracer::Matrix scene;
+    RayTracer::Scene scene;
     std::shared_ptr<RayTracer::Sphere> sphere1 = std::make_shared<RayTracer::Sphere>(Math::Point3d(0, 0, -1), 0.5);
     sphere1->setColor(RayTracer::RED);
     scene.addObject(sphere1);

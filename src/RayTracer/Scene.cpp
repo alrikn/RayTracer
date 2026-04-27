@@ -2,38 +2,56 @@
 ** EPITECH PROJECT, 2026
 ** temp_raytracer
 ** File description:
-** Matrix
+** Scene
 */
 
-#include "Matrix.hpp"
+#include "Scene.hpp"
 #include "IShape.hpp"
 #include "Vector3d.hpp"
+#include <iostream>
 #include <limits>
+#include <memory>
+#include <vector>
 
 namespace RayTracer {
-void Matrix::addObject(const std::shared_ptr<IShape> &object)
+void Scene::addObject(const std::shared_ptr<IShape> &object)
 {
     _objects.push_back(object);
 }
 
-void Matrix::addLight(const std::shared_ptr<ILight> &light)
+void Scene::addLight(const std::shared_ptr<ILight> &light)
 {
     _lights.push_back(light);
 
 }
 
-Math::Vector3d Matrix::traceRay(const Ray &ray) const
+Math::Vector3d Scene::traceRay(const Ray &ray) const
 {
     return traceRay(ray, 0);
 }
 
-double clamp_color(double x)
+double Scene::clamp_color(double x) const
 {
     return std::max(0.0, std::min(255.0, x));
 }
 
+Math::Vector3d Scene::average_light(std::vector<Math::Vector3d> light_contributions) const
+{
+    if (light_contributions.empty()) {
+        return Math::Vector3d(0, 0, 0);
+    }
+    Math::Vector3d sum(0, 0, 0);
+    for (const auto& contribution : light_contributions) {
+        sum += contribution;
+    }
+    sum.x = sum.x / static_cast<double>(light_contributions.size());
+    sum.y = sum.y / static_cast<double>(light_contributions.size());
+    sum.z = sum.z / static_cast<double>(light_contributions.size());
+    return sum;
+}
 
-Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
+
+Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 {
     std::optional<HitRecord> closest_hit; //we only care about first thing it hit (imagine a wall. don't care what behind wall)
     double closest_distance = std::numeric_limits<double>::infinity();
@@ -52,9 +70,13 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
         return Math::Vector3d(0, 0, 0); //black background if we hit nothing
     }
     //when we have a vector of light libs well loop over them but for now
-    Math::Vector3d light_contribution(0, 0, 0);
-    for (const auto& light : _lights)
-        light_contribution += light->intensity(*closest_hit, _objects);
+
+    Math::Vector3d light_contribution = Math::Vector3d(0, 0, 0);
+    std::vector<Math::Vector3d> light_contributions;
+    for (const auto& light : _lights) {
+        light_contributions.push_back(light->intensity(*closest_hit, _objects));
+    }
+    light_contribution = average_light(light_contributions);
 
     Math::Vector3d object_color; //combine the object color with the light contribution to get the final color at the hit point
     //now we clamp it to 255 proportinally
@@ -65,12 +87,9 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     }
 
     //here we calculate the angle of the reflected ray
-    Math::Vector3d incoming_ray_dir = ray.direction;
-    incoming_ray_dir.normalize();
-    Math::Vector3d normal = closest_hit->normal;
-    normal.normalize();
-    Math::Vector3d reflected_dir = incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal); //calculate the reflected ray direction (making it bounce)
-    reflected_dir.normalize();
+    Math::Vector3d incoming_ray_dir = ray.direction.normalize(); //normalize the incoming ray direction
+    Math::Vector3d normal = closest_hit->normal.normalize();
+    Math::Vector3d reflected_dir = (incoming_ray_dir - normal * 2 * incoming_ray_dir.dot(normal)).normalize(); //calculate the reflected ray direction (making it bounce)
 
     //now we create the reflected ray and trace it to get the color contribution from the reflected ray
     Ray reflected_ray(closest_hit->point + normal * epsilon, reflected_dir); //offset
@@ -84,27 +103,38 @@ Math::Vector3d Matrix::traceRay(const Ray &ray, int depth) const
     return (result_color); //combine the object color and the reflected color contribution
 }
 
-void write_color(const Math::Vector3d &color, std::ostream &output)
+void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 {
     int r = static_cast<int>(color.x);
     int g = static_cast<int>(color.y);
     int b = static_cast<int>(color.z);
     if (r > 255 || g > 255 || b > 255)
         throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
-    output << r << " " << g << " " << b << "\n";
+    output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
 }
 
-void Matrix::render(const Camera &camera, int width, int height, std::ostream &output) const
+void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
 {
-    output << "P3\n" << width << " " << height << "\n255\n";
+    std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
+    
+    int percentage = 0;
+    int new_percentage = 0;
     for (int j = height - 1; j >= 0; j--) {
+        new_percentage = (height - j) * 100 / height;
+        if (new_percentage != percentage) {
+            percentage = new_percentage;
+            std::cerr << "\rRendering: " << percentage << "%";
+        }
+
         for (int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
             Math::Vector3d color = traceRay(ray);
-            write_color(color, output);
+            write_color(color, _final_output);
         }
     }
+    output << _final_output;
 }
+
 }

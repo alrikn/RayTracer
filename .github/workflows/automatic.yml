@@ -1,0 +1,54 @@
+name: Automatic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build_and_test:
+    if: github.repository == 'alrikn/RayTracer'
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile project
+        run: make
+        timeout-minutes: 2
+
+      - name: Verify executable
+        run: |
+          if [ ! -f "${{ vars.EXECUTABLE }}" ]; then
+            echo "Executable not found!"
+            exit 1
+          fi
+          echo "Executable found."
+
+      - name: Run tests
+        run: ./raytracer > output.ppm
+        timeout-minutes: 2 #if it can't be done in 2 minutes, it's bad and something has gone wrong
+
+      - name: Clean
+        if: always()
+        run: make fclean
+
+  push_to_mirror:
+    needs: build_and_test
+    if: github.repository == 'alrikn/RayTracer' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror repository
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ secrets.EPITECH_REPO_SSH }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}

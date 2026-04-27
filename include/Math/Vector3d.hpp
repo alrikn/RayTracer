@@ -33,7 +33,8 @@ class Vector3d
         void rotateX(double angle);
         void rotateY(double angle);
         void rotateZ(double angle);
-        void normalize();
+        Vector3d normalize() const;
+        void normalizeSelf(); //in-place normalization
 
         /*operator overloading*/
         Vector3d& operator+=(const Vector3d& rhs);
