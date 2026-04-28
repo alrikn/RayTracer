@@ -11,7 +11,6 @@
 raytracer
 ppm_to_png
 *.png
-.vscode
 compile_commands.json
 .cache
 *.data
