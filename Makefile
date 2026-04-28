@@ -39,11 +39,11 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
-flame_check:
+flame_check: re
 	perf record -g --call-graph dwarf ./raytracer > output.ppm
 	perf script > out.perf
-	./flame_graph/stackcollapse-perf.pl out.perf > out.folded
-	./flame_graph/flamegraph.pl out.folded > flame.svg
+	./graph_test/stackcollapse-perf.pl out.perf > out.folded
+	./graph_test/flamegraph.pl out.folded > flame.svg
 	rm -f out.perf out.folded perf.data perf.data.old
 
 clean:
