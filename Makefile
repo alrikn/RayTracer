@@ -28,7 +28,7 @@ SRC = main.cpp	\
 
 OBJ = $(SRC:.cpp=.o)
 CXX = clang++
-CXXFLAGS = -std=c++20 -Wall -Wextra -g
+CXXFLAGS = -std=c++20 -Wall -Wextra -g -O2 -fno-omit-frame-pointer
 CPPFLAGS = -I include -I include/Shape -I include/Light -I include/Math
 
 all: $(NAME)
@@ -38,6 +38,13 @@ $(NAME): $(OBJ)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+flame_check:
+	perf record -g --call-graph dwarf ./raytracer > output.ppm
+	perf script > out.perf
+	./flame_graph/stackcollapse-perf.pl out.perf > out.folded
+	./flame_graph/flamegraph.pl out.folded > flame.svg
+	rm -f out.perf out.folded perf.data perf.data.old
 
 clean:
 	rm -f $(OBJ) $(CONVERT_OBJ)

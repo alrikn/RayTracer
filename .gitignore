@@ -14,3 +14,8 @@ ppm_to_png
 .vscode
 compile_commands.json
 .cache
+*.data
+*.old
+*perf
+*pl
+*.folded
