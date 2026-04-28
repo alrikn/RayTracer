@@ -32,12 +32,11 @@ class Scene
         double clamp_color(double x) const;
         void write_color(const Math::Vector3d &color, std::string &output) const;
     public:
-        Scene(double brightness = 0.9) : brightness(brightness) {}
+        Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth) {}
         ~Scene() = default;
 
         void addObject(const std::shared_ptr<IShape> &object);
         void addLight(const std::shared_ptr<ILight> &light);
-        Math::Vector3d traceRay(const Ray &ray) const;
         Math::Vector3d traceRay(const Ray &ray, int depth) const; //overloaded func
         void render(const Camera &camera, int width, int height, std::ostream &output) const;
 };
