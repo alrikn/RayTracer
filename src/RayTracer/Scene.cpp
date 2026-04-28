@@ -25,11 +25,6 @@ void Scene::addLight(const std::shared_ptr<ILight> &light)
 
 }
 
-Math::Vector3d Scene::traceRay(const Ray &ray) const
-{
-    return traceRay(ray, 0);
-}
-
 double Scene::clamp_color(double x) const
 {
     return std::max(0.0, std::min(255.0, x));
@@ -130,7 +125,7 @@ void Scene::render(const Camera &camera, int width, int height, std::ostream &ou
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
             Ray ray = camera.ray(u, v);
-            Math::Vector3d color = traceRay(ray);
+            Math::Vector3d color = traceRay(ray, 0);
             write_color(color, _final_output);
         }
     }
