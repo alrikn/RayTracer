@@ -19,13 +19,6 @@
 #include "Vector3d.hpp"
 #include <memory>
 
-void write_color(const Math::Vector3d &color)
-{
-    int r = static_cast<int>(color.x);
-    int g = static_cast<int>(color.y);
-    int b = static_cast<int>(color.z);
-    std::cout << r << " " << g << " " << b << "\n";
-}
 
 //push test
 //testing made entirely by gibbidy. sue me
@@ -34,7 +27,7 @@ void testing_func()
     int x_axis = 4000;
     int y_axis = 2000;
 
-    RayTracer::Scene scene;
+    RayTracer::Scene scene(0.9, 4); //brightness, max_depth
 
     // --- Center sphere ---
     auto center = std::make_shared<RayTracer::Sphere>(
@@ -57,7 +50,7 @@ void testing_func()
     // --- Small sphere (closer) ---
     auto small = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0.3, -0.3, -0.5), 0.2);
-    small->setColor(RayTracer::WHITE);
+    small->setColor(RayTracer::YELLOW);
     scene.addObject(small);
 
     auto ground = std::make_shared<RayTracer::Plane>(
@@ -65,7 +58,7 @@ void testing_func()
         Math::Point3d(0, -0.5, 0)   // point on plane
     );
     ground->setColor(RayTracer::WHITE);
-    ground->setReflectivity(0.15); //make the ground slightly reflective
+    ground->setReflectivity(0.15); //make the ground slightly less reflective
     scene.addObject(ground);
 
     // --- Light ---
@@ -93,17 +86,6 @@ void testing_func()
 
 int main()
 {
-    int x_axis = 4000;
-    int y_axis = 2000;
-    /*
-    RayTracer::Scene scene;
-    std::shared_ptr<RayTracer::Sphere> sphere1 = std::make_shared<RayTracer::Sphere>(Math::Point3d(0, 0, -1), 0.5);
-    sphere1->setColor(RayTracer::RED);
-    scene.addObject(sphere1);
-
-    scene.addLight(std::make_shared<RayTracer::DirectionalLight>(Math::Vector3d(-1, -1, -1), 0.8));
-
-    scene.render(RayTracer::Camera(), x_axis, y_axis, std::cout);
-    */
+    //to be replaced with the parser
     testing_func();
 }
