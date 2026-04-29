@@ -6,16 +6,16 @@
 */
 
 #include "DirectionalLight.hpp"
+#include "ALight.hpp"
 #include "Vector3d.hpp"
 
 
 namespace RayTracer {
 
-DirectionalLight::DirectionalLight(const Math::Vector3d &new_direction, double light_intensity, const Math::Vector3d &color)
+DirectionalLight::DirectionalLight(const Math::Vector3d &new_direction, double light_intensity, const Math::Vector3d &color) :
+    ALight(light_intensity, color)
 {
     this->direction = new_direction.normalize();
-    this->light_intensity = light_intensity;
-    this->color = color; //theoretically this is white, but if u want to make it more sun-like we can make it more yellow
 }
 
 Math::Vector3d DirectionalLight::intensity(const RayTracer::HitRecord& hit, const std::vector<std::shared_ptr<IShape>> &objects) const
@@ -39,7 +39,7 @@ Math::Vector3d DirectionalLight::intensity(const RayTracer::HitRecord& hit, cons
             return Math::Vector3d(0, 0, 0); //in shadow, no light contribution
         }
     }
-    return color * light_intensity * lambert * (hit.color / 255.0); //return the light contribution based on the color, intensity, and lambertian reflectance
+    return _color * _light_intensity * lambert * (hit.color / 255.0); //return the light contribution based on the color, intensity, and lambertian reflectance
 
 }
 }
