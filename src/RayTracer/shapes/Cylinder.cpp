@@ -38,7 +38,7 @@ r^2 = 0
 std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the problem with the current implementat
 {
     std::optional<HitRecord> hit = std::nullopt;
-    Math::Vector3d oc = ray.origin - center;
+    Math::Vector3d oc = ray.origin - origin;
     double oc_proj = oc.dot(axis);
     Math::Vector3d d_perp = ray.direction - (axis * ray.direction.dot(axis));
     Math::Vector3d oc_perp = oc - (axis * oc_proj);
@@ -56,11 +56,11 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
         double k = (k1 < k2 && k1 > 0) ? k1 : k2;
         if (k >= 0) {
             Math::Point3d intersection = ray.origin + (ray.direction * k);
-            double height_at_intersection = (intersection - center).dot(axis);
+            double height_at_intersection = (intersection - origin).dot(axis);
             if (height_at_intersection >= 0 && height_at_intersection <= height) {
                 HitRecord record;
                 record.point = intersection;
-                record.normal = (intersection - (center + axis * height_at_intersection)).normalize();
+                record.normal = (intersection - (origin + axis * height_at_intersection)).normalize();
                 record.color = COLOR_MAP.at(getColor());
                 record.incomingDirection = ray.direction;
                 record.distance = k;
@@ -70,10 +70,10 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
     }
     //front cap intersection.
     double denom = ray.direction.dot(axis);
-    double t_cap = (center - ray.origin).dot(axis) / denom;
+    double t_cap = (origin - ray.origin).dot(axis) / denom;
     if (t_cap > 0) {
         Math::Point3d cap_intersection = ray.origin + (ray.direction * t_cap);
-        if ((cap_intersection - center).dot(cap_intersection - center) <= radius * radius) {
+        if ((cap_intersection - origin).dot(cap_intersection - origin) <= radius * radius) {
             if (!hit || t_cap < hit->distance) {
                 HitRecord record;
                 record.point = cap_intersection;
@@ -86,7 +86,7 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
         }
     }
     //back cap intersection
-    Math::Point3d top_center = center + (axis * height);
+    Math::Point3d top_center = origin + (axis * height);
     t_cap = (top_center - ray.origin).dot(axis) / denom;
     if (t_cap > 0) {
         Math::Point3d cap_intersection = ray.origin + (ray.direction * t_cap);

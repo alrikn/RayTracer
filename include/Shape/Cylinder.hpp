@@ -12,6 +12,7 @@
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
 #include "Ray.hpp"
+#include "Enums.hpp"
 #include <optional>
 
 namespace RayTracer {
@@ -25,7 +26,7 @@ class Cylinder : public Ashape
         double height = 0;
 
         Cylinder();
-        Cylinder(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center), axis(axis), radius(radius), height(height) {};
+        Cylinder(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center, CYLINDER), axis(axis), radius(radius), height(height) {};
         ~Cylinder() = default;
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
 };
