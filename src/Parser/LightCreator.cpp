@@ -20,10 +20,10 @@ std::shared_ptr<RayTracer::ILight> Parser::createAmbientLight(const libconfig::S
 
     auto ambientLight = std::make_shared<RayTracer::AmbientLight>(brightness);
 
-    //if (lightConfig.exists("color")) {
-    //    auto color = parseColor(lightConfig.lookup("color"));
-    //    ambientLight->setColor(color);
-    //}
+    if (lightConfig.exists("color_vector")) {
+        auto color = parseVector3d(lightConfig.lookup("color_vector"));
+        ambientLight = std::make_shared<RayTracer::AmbientLight>(brightness, color);
+    }
     return ambientLight;
 }
 
@@ -35,10 +35,10 @@ std::shared_ptr<RayTracer::ILight> Parser::createDirectionalLight(const libconfi
 
     auto directionalLight = std::make_shared<RayTracer::DirectionalLight>(direction, brightness);
 
-    //if (lightConfig.exists("color")) {
-    //    auto color = parseColor(lightConfig.lookup("color"));
-    //    directionalLight->setColor(color);
-    //}
+    if (lightConfig.exists("color_vector")) {
+        auto color = parseVector3d(lightConfig.lookup("color_vector"));
+        directionalLight = std::make_shared<RayTracer::DirectionalLight>(direction, brightness, color);
+    }
     return directionalLight;
 }
 
@@ -54,9 +54,9 @@ std::shared_ptr<RayTracer::ILight> Parser::createSpecularLight(const libconfig::
 
     auto specularLight = std::make_shared<RayTracer::SpecularLight>(direction, brightness, shininess, specular_strength);
 
-    //if (lightConfig.exists("color")) {
-    //    auto color = parseColor(lightConfig.lookup("color"));
-    //    specularLight->setColor(color);
-    //}
+    if (lightConfig.exists("color_vector")) {
+        auto color = parseVector3d(lightConfig.lookup("color_vector"));
+        specularLight = std::make_shared<RayTracer::SpecularLight>(direction, brightness, shininess, specular_strength, color);
+    }
     return specularLight;
 }
