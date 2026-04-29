@@ -153,10 +153,13 @@ void Scene::renderChunk(std::vector<std::vector<Math::Vector3d>> &pixels, std::a
             pixels[j][i] = traceRay(ray, 0);
         }
         int done = ++columns_rendered;
-        // hold the lock only for the print, release immediately after
-        {
-            std::lock_guard<std::mutex> lock(cerr_mutex);
-            std::cerr << "\rRendering: " << std::fixed << std::setprecision(2) << (done * 100.0 / width) << "% (" << done << "/" << width << " columns)" << std::flush;
+        int print_interval = std::max(1, static_cast<int>(width) / 100); //print every ~1% of columns to avoid flooding the log
+        if (done % print_interval == 0 || done == static_cast<int>(width)) {
+            // hold the lock only for the print, release immediately after
+            {
+                std::lock_guard<std::mutex> lock(cerr_mutex);
+                std::cerr << "\rRendering: " << std::fixed << std::setprecision(2) << (done * 100.0 / width) << "% (" << done << "/" << width << " columns)" << std::flush;
+            }
         }
     }
 }
