@@ -48,6 +48,29 @@ const std::unordered_map<Color, Math::Vector3d> COLOR_MAP = {
     {BLACK, BLACK_COLOR}
 };
 
+
+/*
+enum of all the shapes. this will be used for the parser to know which shape to create.
+*/
+enum ShapeType {
+    SPHERE,
+    PLANE,
+    RECTANGLE
+};
+
+//for making the lights
+enum LightType {
+    AMBIENT,
+    DIRECTIONAL,
+    SPECULAR
+};
+
+//for knowing what each object/light takes in as input for the parser
+enum MathType {
+    VECTOR3D,
+    POINT3D
+};
+
 /*
 this struct exists so that we can calculate the brightness of a point on a shape
 */
