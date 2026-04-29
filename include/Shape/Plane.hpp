@@ -20,11 +20,10 @@ class Plane : public Ashape
 {
     private:
         Math::Vector3d normal; //the normal vector of the plane
-        Math::Point3d point; //a point on the plane
         //double d; //the distance from the origin to the plane along the normal vector
 
     public:
-        Plane(Math::Vector3d new_normal = Math::Vector3d(0, 1, 0), Math::Point3d point = Math::Point3d(0, 0, 0)) : normal(new_normal.normalize()), point(point) {};
+        Plane(Math::Vector3d new_normal = Math::Vector3d(0, 1, 0), Math::Point3d point = Math::Point3d(0, 0, 0)) : Ashape(point, ShapeType::PLANE), normal(new_normal.normalize())  {};
         ~Plane() = default;
 
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;

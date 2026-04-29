@@ -25,6 +25,11 @@ SRC = main.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
 	src/RayTracer/lights/SpecularLight.cpp   \
+	src/Parser/Parser.cpp	\
+	src/Parser/LightCreator.cpp \
+	src/Parser/ShapeCreator.cpp \
+	src/Parser/helper.cpp
+
 
 
 OBJ = $(SRC:.cpp=.o)
@@ -35,7 +40,7 @@ CPPFLAGS = -I include -I include/Shape -I include/Light -I include/Math
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ) -lconfig++
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
@@ -44,7 +49,7 @@ flame_check: re
 	perf record -g --call-graph dwarf ./raytracer > output.ppm
 	perf script > out.perf
 	./graph_test/stackcollapse-perf.pl out.perf > out.folded
-	./graph_test/flamegraph.pl out.folded > flame.svg
+	./graph_test/flamegraph.pl --width 3000 out.folded > docs/flame.svg
 	rm -f out.perf out.folded perf.data perf.data.old
 
 clean:

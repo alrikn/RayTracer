@@ -16,6 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y libconfig++-dev
+
       - name: Compile project
         run: make
         timeout-minutes: 2

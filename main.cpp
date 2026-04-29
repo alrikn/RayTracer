@@ -9,6 +9,7 @@
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
 #include "IShape.hpp"
+#include "Parser.hpp"
 #include "Scene.hpp"
 #include "Plane.hpp"
 #include "Rectangle.hpp"
@@ -26,16 +27,18 @@
 //i wanna add a cylinder. 
 void testing_func()
 {
-    int x_axis = 8000;
-    int y_axis = 4000;
+    int x_axis = 6000;
+    int y_axis = 3000;
 
     RayTracer::Scene scene(0.9, 4); //brightness, max_depth
 
+    scene.setheight(y_axis);
+    scene.setwidth(x_axis);
     // --- Center sphere ---
     auto center = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0, 0, -1), 0.5);
-    center->setColor(RayTracer::RED);
-    scene.addObject(center);
+    center->setColor(RED);
+    scene.addShape(center);
 
     //If i wanted the cylinder to be visible the x would be 
     auto cylinder = std::make_shared<RayTracer::Cylinder>(
@@ -44,34 +47,35 @@ void testing_func()
         0.5,                        // radius
         0.4                         // height
     );
-    cylinder->setColor(RayTracer::MAGENTA);
-    scene.addObject(cylinder);
+    cylinder->setColor(MAGENTA);
+    scene.addShape(cylinder);
     /*
     // --- Left sphere ---
     auto left = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(-1.0, 0, -1.5), 0.5);
-    left->setColor(RayTracer::BLUE);
-    scene.addObject(left);
+    left->setColor(BLUE);
+    scene.addShape(left);
+
     */
     // --- Right sphere ---
     auto right = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(1.0, 0, -1.5), 0.5);
-    right->setColor(RayTracer::GREEN);
-    scene.addObject(right);
+    right->setColor(GREEN);
+    scene.addShape(right);
 
     // --- Small sphere (closer) ---
     auto small = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0.3, -0.3, -0.5), 0.2);
-    small->setColor(RayTracer::YELLOW);
-    scene.addObject(small);
+    small->setColor(YELLOW);
+    scene.addShape(small);
 
     auto ground = std::make_shared<RayTracer::Plane>(
         Math::Vector3d(0, 1, 0),      // upward normal
         Math::Point3d(0, -0.5, 0)   // point on plane
     );
-    ground->setColor(RayTracer::WHITE);
+    ground->setColor(WHITE);
     ground->setReflectivity(0.15); //make the ground slightly less reflective
-    scene.addObject(ground);
+    scene.addShape(ground);
 
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
@@ -93,11 +97,29 @@ void testing_func()
     );
 
     // --- Render ---
-    scene.render(camera, x_axis, y_axis, std::cout);
+    scene.render(std::cout);
 }
 
 int main()
 {
-    //to be replaced with the parser
-    testing_func();
+    //testing_func();
+
+
+    Parser parser;
+
+    try {
+        parser.run_parser("scene_config.cfg");
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing scene configuration: " << e.what() << std::endl;
+        return 84;
+    }
+
+    if (!parser.ParseSuccess()) {
+        std::cerr << "Failed to parse the scene configuration." << std::endl;
+        return 84;
+    }
+
+    RayTracer::Scene& scene = parser.getScene();
+
+    scene.render(std::cout);
 }

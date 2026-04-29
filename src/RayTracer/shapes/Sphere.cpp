@@ -48,7 +48,7 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
 {
     //first we have to shift the center
     //Math::Point3d oc_point = ray.origin - center;
-    Math::Vector3d oc = ray.origin - center;
+    Math::Vector3d oc = ray.origin - origin;
 
     Math::Vector3d d = ray.direction;
     double a = d.dot(d);
@@ -77,7 +77,7 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
     }
     Math::Point3d point = ray.origin + ray.direction * k;
 
-    Math::Vector3d normal = (point - center).normalize();
+    Math::Vector3d normal = (point - origin).normalize();
 
     HitRecord hit;
     hit.distance = k;
