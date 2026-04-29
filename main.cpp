@@ -33,25 +33,25 @@ void testing_func()
     auto center = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0, 0, -1), 0.5);
     center->setColor(RED);
-    scene.addObject(center);
+    scene.addShape(center);
 
     // --- Left sphere ---
     auto left = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(-1.0, 0, -1.5), 0.5);
     left->setColor(BLUE);
-    scene.addObject(left);
+    scene.addShape(left);
 
     // --- Right sphere ---
     auto right = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(1.0, 0, -1.5), 0.5);
     right->setColor(GREEN);
-    scene.addObject(right);
+    scene.addShape(right);
 
     // --- Small sphere (closer) ---
     auto small = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0.3, -0.3, -0.5), 0.2);
     small->setColor(YELLOW);
-    scene.addObject(small);
+    scene.addShape(small);
 
     auto ground = std::make_shared<RayTracer::Plane>(
         Math::Vector3d(0, 1, 0),      // upward normal
@@ -59,7 +59,7 @@ void testing_func()
     );
     ground->setColor(WHITE);
     ground->setReflectivity(0.15); //make the ground slightly less reflective
-    scene.addObject(ground);
+    scene.addShape(ground);
 
     // --- Light ---
     scene.addLight(std::make_shared<RayTracer::DirectionalLight>(

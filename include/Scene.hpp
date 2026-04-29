@@ -35,7 +35,7 @@ class Scene
         Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth) {}
         ~Scene() = default;
 
-        void addObject(const std::shared_ptr<IShape> &object);
+        void addShape(const std::shared_ptr<IShape> &object);
         void addLight(const std::shared_ptr<ILight> &light);
         Math::Vector3d traceRay(const Ray &ray, int depth) const; //overloaded func
         void render(const Camera &camera, int width, int height, std::ostream &output) const;

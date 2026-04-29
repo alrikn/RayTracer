@@ -8,7 +8,14 @@
 #ifndef INCLUDED_PARSER_HPP
     #define INCLUDED_PARSER_HPP
 
+#include "Enums.hpp"
+#include "IShape.hpp"
 #include "Scene.hpp"
+#include "Factory.hpp"
+#include <libconfig.h++>
+#include <memory>
+
+
 
 /*
 SHAPES:
@@ -44,14 +51,42 @@ LIGHTS:
     - color (vector3d) OPTIONAL
 */
 
+using ShapeFactoryFunc = std::function<std::shared_ptr<RayTracer::IShape>(const libconfig::Setting& shapeConfig)>;
+
+using LightFactoryFunc = std::function<std::shared_ptr<RayTracer::ILight>(const libconfig::Setting& lightConfig)>;
 
 class Parser
 {
     private:
-        RayTracer::Scene scene; //the scene that will be rendered. the parser will fill this scene with objects and lights based on the input file
+        std::unique_ptr<RayTracer::Scene> scene; //the scene that will be rendered. the parser will fill this scene with objects and lights based on the input file
+        libconfig::Config config; //the config object
+        std::map<std::string, ShapeFactoryFunc> shapeFactories;
+        std::map<std::string, LightFactoryFunc> lightFactories;
+        void parseScene();
+        void parseCamera(); //will have to be hardcoded
+        void parseShapes();
+        void parseLights();
+
+        //now the funcs to populate the shapeFactories map.
+        std::shared_ptr<RayTracer::IShape> createSphere(const libconfig::Setting& shapeConfig);
+        std::shared_ptr<RayTracer::IShape> createPlane(const libconfig::Setting& shapeConfig);
+        std::shared_ptr<RayTracer::IShape> createRectangle(const libconfig::Setting& shapeConfig);
+
+        //now the funcs to populate the lightFactories map.
+        std::shared_ptr<RayTracer::ILight> createAmbientLight(const libconfig::Setting& lightConfig);
+        std::shared_ptr<RayTracer::ILight> createDirectionalLight(const libconfig::Setting& lightConfig);
+        std::shared_ptr<RayTracer::ILight> createSpecularLight(const libconfig::Setting& lightConfig);
+
+
+        //a few helper funcs for parsing:
+        Math::Vector3d parseVector3d(const libconfig::Setting& array);
+        Math::Point3d parsePoint3d(const libconfig::Setting& array);
+        Color parseColor(const libconfig::Setting& string);
     public:
         Parser();
 
+
+        void run_parser(const std::string &filename);
         ~Parser() = default;
 
 };

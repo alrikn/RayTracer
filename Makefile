@@ -24,6 +24,7 @@ SRC = main.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
 	src/RayTracer/lights/SpecularLight.cpp   \
+	src/Parser.cpp
 
 
 OBJ = $(SRC:.cpp=.o)

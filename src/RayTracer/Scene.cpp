@@ -14,7 +14,7 @@
 #include <vector>
 
 namespace RayTracer {
-void Scene::addObject(const std::shared_ptr<IShape> &object)
+void Scene::addShape(const std::shared_ptr<IShape> &object)
 {
     _objects.push_back(object);
 }
