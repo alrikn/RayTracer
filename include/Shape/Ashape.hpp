@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "IShape.hpp"
+#include "Enums.hpp"
 #include "Point3d.hpp"
 #include "Vector3d.hpp"
 
@@ -22,9 +23,10 @@ class Ashape : public IShape
     private:
     protected:
         Color default_color = RED;
+        ShapeType shape_type;
     public:
         Ashape() = default;
-        Ashape(const Math::Point3d& origin) : origin(origin) {};
+        Ashape(const Math::Point3d& origin, ShapeType type) : shape_type(type), origin(origin) {};
         ~Ashape() = default;
 
         Math::Point3d origin;
@@ -45,6 +47,9 @@ class Ashape : public IShape
             if (reflectivity > 1.0)
                 reflectivity = 1.0;
             this->reflectivity = reflectivity;
+        }
+        ShapeType getShapeType() const override {
+            return shape_type;
         }
 };
 

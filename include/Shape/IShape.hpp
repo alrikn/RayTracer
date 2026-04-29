@@ -8,23 +8,12 @@
 #ifndef INCLUDED_ISHAPE_HPP
     #define INCLUDED_ISHAPE_HPP
 
+#include "Enums.hpp"
 #include "Ray.hpp"
 #include "Vector3d.hpp"
 #include <optional>
 #include <unordered_map>
 namespace RayTracer {
-
-//these be a few colors shapes can be at (only main colors)
-enum Color {
-    RED,
-    GREEN,
-    BLUE,
-    YELLOW,
-    MAGENTA,
-    CYAN,
-    WHITE,
-    BLACK,
-};
 
 //colour fromshape:
 const Math::Vector3d RED_COLOR(255, 0, 0);
@@ -50,28 +39,6 @@ const std::unordered_map<Color, Math::Vector3d> COLOR_MAP = {
 
 
 /*
-enum of all the shapes. this will be used for the parser to know which shape to create.
-*/
-enum ShapeType {
-    SPHERE,
-    PLANE,
-    RECTANGLE
-};
-
-//for making the lights
-enum LightType {
-    AMBIENT,
-    DIRECTIONAL,
-    SPECULAR
-};
-
-//for knowing what each object/light takes in as input for the parser
-enum MathType {
-    VECTOR3D,
-    POINT3D
-};
-
-/*
 this struct exists so that we can calculate the brightness of a point on a shape
 */
 struct HitRecord {
@@ -94,6 +61,7 @@ class IShape
         virtual Color getColor() const = 0;
         virtual double getReflectivity() const = 0;
         virtual void setReflectivity(double reflectivity) = 0;
+        virtual ShapeType getShapeType() const = 0;
 };
 }
 #endif

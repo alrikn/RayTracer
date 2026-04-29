@@ -23,7 +23,7 @@ class Sphere : public Ashape
     protected:
     public:
         Sphere();
-        Sphere(const Math::Point3d &center, double radius) : Ashape(center), radius(radius) {};
+        Sphere(const Math::Point3d &center, double radius) : Ashape(center, ShapeType::SPHERE), radius(radius) {};
         ~Sphere() = default;
 
         double radius = 0;
