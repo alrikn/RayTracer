@@ -113,13 +113,16 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
 
 void Scene::render(std::ostream &output) const
 {
+    if (width == 0 || height == 0)
+        return;
     int num_threads = std::max(1, static_cast<int>(std::thread::hardware_concurrency()) - 1); //leave one core free
+    num_threads = std::min(num_threads, static_cast<int>(width)); //cap to width: more threads than columns would cause out-of-bounds writes
     std::cerr << "Rendering " << width << "x" << height << " image using " << num_threads << " threads...\n";
 
     std::vector<std::vector<Math::Vector3d>> pixels(height, std::vector<Math::Vector3d>(width)); //2D vector to store pixel colors
     std::atomic<int> columns_rendered{0};
     std::mutex cerr_mutex; //we use a mutex to protect cerr output because multiple threads will be writing to cerr at the same time, and we want to avoid interleaving of output which can make it unreadable. By locking the mutex before writing to cerr and unlocking it afterwards, we ensure that only one thread writes to cerr at a time, keeping the output clean and coherent.
-    int cols_per_thread = (width + num_threads - 1) / num_threads; //calculate how many columns each thread should render (rounding up)
+    int cols_per_thread = (static_cast<int>(width) + num_threads - 1) / num_threads; //calculate how many columns each thread should render (rounding up)
 
     auto t_start = std::chrono::high_resolution_clock::now();
 
