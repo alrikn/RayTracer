@@ -57,25 +57,29 @@ void Parser::run_parser(const std::string &filename)
     //config.readFile(filename.c_str()); //crashing immediately
 
     parseScene();
-    parseCamera();
+    //parseCamera();
     parseShapes();
     parseLights();
 }
 
 void Parser::parseScene()
 {
-    //for now hardcoded, in the future it won't be
+    const libconfig::Setting& sceneConfig = config.lookup("scene");
+    double brightness = 0.0;
+    double max_depth = 0.0;
 
-    scene = std::make_unique<RayTracer::Scene>(0.9, 4); //for now hardcoded, in the future it won't be
-}
+    brightness = parseDouble(sceneConfig.lookup("brightness"));
+    max_depth = parseDouble(sceneConfig.lookup("max_depth"));
 
-void Parser::parseCamera()
-{
-    //for now hardcoded, in the future it won't be
-    width = 4000; //this will be used to design better camera, so that the width and height of rectangle is based on this
-    height = 2000;
+    double width = 4000; //default value, will be used to design better camera, so that the width and height of rectangle is based on this
+    double height = 2000; //default value, will be used to design better camera, so that the width and height of rectangle is based on this
 
-    RayTracer::Camera camera(
+    width = parseDouble(sceneConfig.lookup("width"));
+    height = parseDouble(sceneConfig.lookup("height"));
+
+    scene = std::make_unique<RayTracer::Scene>(brightness, max_depth);
+
+    RayTracer::Camera camera( //for now hardcoded. TODO: fix this
         Math::Point3d(0, 1, 1), // move camera up and slightly back
     RayTracer::Rectangle(
         Math::Point3d(-3, -1.5, -1), // shift screen downward
@@ -87,6 +91,25 @@ void Parser::parseCamera()
     scene->setheight(height);
     scene->setCamera(camera);
 }
+
+//void Parser::parseCamera()
+//{
+//    //for now hardcoded, in the future it won't be
+//    width = 4000; //this will be used to design better camera, so that the width and height of rectangle is based on this
+//    height = 2000;
+//
+//    RayTracer::Camera camera(
+//        Math::Point3d(0, 1, 1), // move camera up and slightly back
+//    RayTracer::Rectangle(
+//        Math::Point3d(-3, -1.5, -1), // shift screen downward
+//        Math::Vector3d(6, 0, 0),
+//        Math::Vector3d(0, 3, 0)
+//        )
+//    );
+//    scene->setwidth(width);
+//    scene->setheight(height);
+//    scene->setCamera(camera);
+//}
 
 void Parser::parseShapes()
 {
