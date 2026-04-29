@@ -11,15 +11,7 @@
 
 
 namespace RayTracer {
-/*
-struct HitRecord {
-    double distance; //this is the distance along the ray where the hit occurred
-    Math::Point3d point; //the point of intersection
-    Math::Vector3d normal; //the normal vector at the point of intersection, which is used for lighting calculations
-    Math::Vector3d color; //the color of the shape at the point of intersection, which can be used for shading and rendering
-};
 
-*/
 std::optional<HitRecord> Plane::hits(const RayTracer::Ray& ray) const
 {
     const double epsilon = 1e-6; //our new way of saying 0
@@ -28,7 +20,7 @@ std::optional<HitRecord> Plane::hits(const RayTracer::Ray& ray) const
     if (std::abs(denom) < epsilon)
         return std::nullopt; //ray is parallel to the plane
 
-    double t = (point - ray.origin).dot(normal) / denom;
+    double t = (origin - ray.origin).dot(normal) / denom;
     if (t < epsilon)
         return std::nullopt; //intersection is behind the ray origin
 

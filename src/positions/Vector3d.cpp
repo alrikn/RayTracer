@@ -80,6 +80,7 @@ void Vector3d::normalizeSelf()
 Vector3d Vector3d::normalize() const
 {
     double len = length();
+
     if (len > 0) {
         return Vector3d(x / len, y / len, z / len);
     }

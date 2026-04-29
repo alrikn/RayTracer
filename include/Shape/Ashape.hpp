@@ -24,10 +24,10 @@ class Ashape : public IShape
         Color default_color = RED;
     public:
         Ashape() = default;
-        Ashape(const Math::Point3d& center) : center(center) {};
+        Ashape(const Math::Point3d& origin) : origin(origin) {};
         ~Ashape() = default;
 
-        Math::Point3d center;
+        Math::Point3d origin;
         double reflectivity = 0.5; //how much the object reflects light. 0 means no reflection, 1 means perfect mirror. this is a value between 0 and 1.
 
         void setColor(Color color) override {

@@ -24,8 +24,8 @@
 //testing made entirely by gibbidy. sue me
 void testing_func()
 {
-    int x_axis = 8000;
-    int y_axis = 4000;
+    int x_axis = 6000;
+    int y_axis = 3000;
 
     RayTracer::Scene scene(0.9, 4); //brightness, max_depth
 
