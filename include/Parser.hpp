@@ -76,6 +76,7 @@ class Parser
         std::shared_ptr<RayTracer::IShape> createSphere(const libconfig::Setting& shapeConfig);
         std::shared_ptr<RayTracer::IShape> createPlane(const libconfig::Setting& shapeConfig);
         std::shared_ptr<RayTracer::IShape> createRectangle(const libconfig::Setting& shapeConfig);
+        std::shared_ptr<RayTracer::IShape> createCylinder(const libconfig::Setting& shapeConfig);
 
         //now the funcs to populate the lightFactories map.
         std::shared_ptr<RayTracer::ILight> createAmbientLight(const libconfig::Setting& lightConfig);
