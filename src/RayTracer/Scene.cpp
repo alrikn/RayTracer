@@ -15,6 +15,9 @@
 #include <thread>
 #include <chrono>
 #include <iomanip>
+#include <array>
+#include <cstdint>
+#include <algorithm>
 
 namespace RayTracer {
 void Scene::addShape(const std::shared_ptr<IShape> &object)
@@ -100,15 +103,9 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     return (result_color); //combine the object color and the reflected color contribution
 }
 
-void Scene::write_color(const Math::Vector3d &color, std::string &output) const
+void Scene::write_color(const std::array<uint8_t, 3> &color, std::string &output) const
 {
-    int r = static_cast<int>(color.x);
-    int g = static_cast<int>(color.y);
-    int b = static_cast<int>(color.z);
-
-    if (r > 255 || g > 255 || b > 255)
-        throw std::runtime_error("ERROR: color value out of range = " + std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b));
-    output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
+    output += std::to_string(color[0]) + " " + std::to_string(color[1]) + " " + std::to_string(color[2]) + "\n";
 }
 
 void Scene::render(std::ostream &output) const
@@ -119,7 +116,7 @@ void Scene::render(std::ostream &output) const
     num_threads = std::min(num_threads, static_cast<int>(width)); //cap to width: more threads than columns would cause out-of-bounds writes
     std::cerr << "Rendering " << width << "x" << height << " image using " << num_threads << " threads...\n";
 
-    std::vector<std::vector<Math::Vector3d>> pixels(height, std::vector<Math::Vector3d>(width)); //2D vector to store pixel colors
+    std::vector<std::vector<std::array<uint8_t, 3>>> pixels(height, std::vector<std::array<uint8_t, 3>>(width)); //2D vector to store pixel colors
     std::atomic<int> columns_rendered{0};
     std::mutex cerr_mutex; //we use a mutex to protect cerr output because multiple threads will be writing to cerr at the same time, and we want to avoid interleaving of output which can make it unreadable. By locking the mutex before writing to cerr and unlocking it afterwards, we ensure that only one thread writes to cerr at a time, keeping the output clean and coherent.
     int cols_per_thread = (static_cast<int>(width) + num_threads - 1) / num_threads; //calculate how many columns each thread should render (rounding up)
@@ -131,7 +128,7 @@ void Scene::render(std::ostream &output) const
     for (int t = 0; t < num_threads; t++) {
         int start_col = t * cols_per_thread;
         int end_col = (t == num_threads - 1) ? static_cast<int>(width) : start_col + cols_per_thread; //last thread takes any remaining columns
-        threads.emplace_back(&Scene::renderChunk, this, std::ref(pixels), std::ref(columns_rendered), std::ref(cerr_mutex), start_col, end_col);
+        threads.emplace_back(&Scene::renderChunk, this, std::ref(pixels), std::ref(columns_rendered), std::ref(cerr_mutex), start_col, end_col); //last thread takes any remaining columns
     }
     for (auto &thread : threads)
         thread.join(); //wait for all threads to finish
@@ -143,14 +140,19 @@ void Scene::render(std::ostream &output) const
     output << serializeBuffer(pixels);
 }
 
-void Scene::renderChunk(std::vector<std::vector<Math::Vector3d>> &pixels, std::atomic<int> &columns_rendered, std::mutex &cerr_mutex, int start_col, int end_col) const
+void Scene::renderChunk(std::vector<std::vector<std::array<uint8_t, 3>>> &pixels, std::atomic<int> &columns_rendered, std::mutex &cerr_mutex, int start_col, int end_col) const
 {
     for (int i = start_col; i < end_col; i++) {
         for (int j = static_cast<int>(height) - 1; j >= 0; j--) {
             double u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);
             double v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);
             Ray ray = _camera.ray(u, v);
-            pixels[j][i] = traceRay(ray, 0);
+            Math::Vector3d color = traceRay(ray, 0);
+            pixels[j][i] = {
+                static_cast<uint8_t>(std::clamp(color.x, 0.0, 255.0)),
+                static_cast<uint8_t>(std::clamp(color.y, 0.0, 255.0)),
+                static_cast<uint8_t>(std::clamp(color.z, 0.0, 255.0))
+            };
         }
         int done = ++columns_rendered;
         int print_interval = std::max(1, static_cast<int>(width) / 100); //print every ~1% of columns to avoid flooding the log
@@ -164,7 +166,7 @@ void Scene::renderChunk(std::vector<std::vector<Math::Vector3d>> &pixels, std::a
     }
 }
 
-std::string Scene::serializeBuffer(const std::vector<std::vector<Math::Vector3d>> &pixels) const
+std::string Scene::serializeBuffer(const std::vector<std::vector<std::array<uint8_t, 3>>> &pixels) const
 {
     std::string ppm = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
     for (int j = static_cast<int>(height) - 1; j >= 0; j--)
