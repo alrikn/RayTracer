@@ -24,7 +24,6 @@ class DirectionalLight : public ALight
 {
     private:
         Math::Vector3d direction; //this is where the light comes from (the sun in a way)
-        double _light_intensity = 1; //how strong the light is
         Math::Vector3d _color = Math::Vector3d(255, 255, 255); //the color of the light (white by default)
     protected:
     public:

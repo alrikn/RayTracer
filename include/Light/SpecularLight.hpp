@@ -18,8 +18,6 @@ class SpecularLight : public ALight
 {
     private:
         Math::Vector3d _direction; //the direction the light is coming from
-        double _light_intensity = 1.0; //how strong the light is overall
-        Math::Vector3d _color = Math::Vector3d(255, 255, 255); //the color of the specular highlight (white by default)
         double _shininess = 32.0; //the specular exponent — higher value means a smaller, sharper highlight
         double _specular_strength = 0.5; //how much the specular highlight contributes to the final color
     public:
