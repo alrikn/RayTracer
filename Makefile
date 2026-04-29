@@ -49,7 +49,9 @@ flame_check: re
 	perf record -g --call-graph dwarf ./raytracer > output.ppm
 	perf script > out.perf
 	./graph_test/stackcollapse-perf.pl out.perf > out.folded
-	./graph_test/flamegraph.pl --width 3000 out.folded > docs/flame.svg
+	./graph_test/flamegraph.pl --width 2000 out.folded > docs/flame.svg
+	rm -f docs/output.png
+	ffmpeg -i output.ppm docs/output.png -loglevel quiet
 	rm -f out.perf out.folded perf.data perf.data.old
 
 clean:
