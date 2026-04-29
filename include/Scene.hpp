@@ -14,11 +14,10 @@
 
 #include <vector>
 #include <memory>
-#include <thread>
+#include <string>
+#include <iosfwd>
 #include <atomic>
 #include <mutex>
-#include <chrono>
-#include <iomanip>
 
 namespace RayTracer {
 

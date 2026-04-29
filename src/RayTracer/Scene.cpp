@@ -12,6 +12,9 @@
 #include <limits>
 #include <memory>
 #include <vector>
+#include <thread>
+#include <chrono>
+#include <iomanip>
 
 namespace RayTracer {
 void Scene::addShape(const std::shared_ptr<IShape> &object)
