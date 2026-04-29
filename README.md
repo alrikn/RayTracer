@@ -13,6 +13,7 @@ Currently supports:
 - Shapes
   - Spheres
   - Planes
+  - Cylinders
 - Lights
   - Specular
   - Directional
