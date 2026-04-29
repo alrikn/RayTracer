@@ -40,9 +40,9 @@ void testing_func()
     //If i wanted the cylinder to be visible the x would be 
     auto cylinder = std::make_shared<RayTracer::Cylinder>(
         Math::Point3d(-1, 0, -1.5), // base center
-        Math::Vector3d(0, 1, 0),    // axis
+        Math::Vector3d(-1, 0, 0),    // axis
         0.5,                        // radius
-        1.0                         // height
+        0.4                         // height
     );
     cylinder->setColor(RayTracer::MAGENTA);
     scene.addObject(cylinder);

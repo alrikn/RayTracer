@@ -48,27 +48,59 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
 
     double discriminant = (b * b) - (4 * a * c);
 
-    if (discriminant < 0) {
-        return std::nullopt;
-    }
     //if the discriminant is negative, it means that there is no real solution, which means that the ray does not hit the infinite cylinder. if the discriminant is zero, it means that there is one solution, which means that the ray is tangent to the infinite cylinder. if the discriminant is positive, it means that there are two solutions, which means that the ray hits the infinite cylinder at two points.
-    double sqrtD = std::sqrt(discriminant);
-    double k1 = (-b - sqrtD) / (2 * a);
-    double k2 = (-b + sqrtD) / (2 * a);
-    double k = (k1 < k2 && k1 > 0) ? k1 : k2;
-    if (k < 0) {
-        return std::nullopt;
+    if (discriminant >= 0) {
+        double sqrtD = std::sqrt(discriminant);
+        double k1 = (-b - sqrtD) / (2 * a);
+        double k2 = (-b + sqrtD) / (2 * a);
+        double k = (k1 < k2 && k1 > 0) ? k1 : k2;
+        if (k >= 0) {
+            Math::Point3d intersection = ray.origin + (ray.direction * k);
+            double height_at_intersection = (intersection - center).dot(axis);
+            if (height_at_intersection >= 0 && height_at_intersection <= height) {
+                HitRecord record;
+                record.point = intersection;
+                record.normal = (intersection - (center + axis * height_at_intersection)).normalize();
+                record.color = COLOR_MAP.at(getColor());
+                record.incomingDirection = ray.direction;
+                record.distance = k;
+                hit = record;
+            }
+        }
     }
-    Math::Point3d intersection = ray.origin + (ray.direction * k);
-    double height_at_intersection = (intersection - center).dot(axis);
-    if (height_at_intersection >= 0 && height_at_intersection <= height) {
-        HitRecord record;
-        record.point = intersection;
-        record.normal = (intersection - (center + axis * height_at_intersection)).normalize();
-        record.color = COLOR_MAP.at(getColor());
-        record.incomingDirection = ray.direction;
-        record.distance = k;
-        hit = record;
+    //front cap intersection.
+    double denom = ray.direction.dot(axis);
+    double t_cap = (center - ray.origin).dot(axis) / denom;
+    if (t_cap > 0) {
+        Math::Point3d cap_intersection = ray.origin + (ray.direction * t_cap);
+        if ((cap_intersection - center).dot(cap_intersection - center) <= radius * radius) {
+            if (!hit || t_cap < hit->distance) {
+                HitRecord record;
+                record.point = cap_intersection;
+                record.normal = axis * -1;
+                record.color = COLOR_MAP.at(getColor());
+                record.incomingDirection = ray.direction;
+                record.distance = t_cap;
+                hit = record;
+            }
+        }
+    }
+    //back cap intersection
+    Math::Point3d top_center = center + (axis * height);
+    t_cap = (top_center - ray.origin).dot(axis) / denom;
+    if (t_cap > 0) {
+        Math::Point3d cap_intersection = ray.origin + (ray.direction * t_cap);
+        if ((cap_intersection - top_center).dot(cap_intersection - top_center) <= radius * radius) {
+            if (!hit || t_cap < hit->distance) {
+                HitRecord record;
+                record.point = cap_intersection;
+                record.normal = axis;
+                record.color = COLOR_MAP.at(getColor());
+                record.incomingDirection = ray.direction;
+                record.distance = t_cap;
+                hit = record;
+            }
+        }
     }
     return hit;
 }
