@@ -14,14 +14,12 @@ namespace RayTracer {
 
   SpecularLight::SpecularLight(const Math::Vector3d &direction, double intensity,
                                 double shininess, double specular_strength,
-                                const Math::Vector3d &color)
+                                const Math::Vector3d &color) : ALight(intensity, color)
   {
       this->_direction = direction;
       this->_direction.normalizeSelf();
-      this->_intensity = intensity;
       this->_shininess = shininess;
       this->_specular_strength = specular_strength;
-      this->_color = color;
   }
 
   Math::Vector3d SpecularLight::intensity(const RayTracer::HitRecord& hit, const std::vector<std::shared_ptr<IShape>> &objects) const
@@ -54,7 +52,7 @@ namespace RayTracer {
     double spec_angle = std::max(reflect_dir.dot(view_dir), 0.0);
     double specular = std::pow(spec_angle, _shininess) * _specular_strength;
 
-    return _color * _intensity * specular;
+    return _color * _light_intensity * specular;
   }
 
 }
