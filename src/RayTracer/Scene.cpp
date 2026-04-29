@@ -147,8 +147,8 @@ void Scene::renderChunk(std::vector<std::vector<Math::Vector3d>> &pixels, std::a
 {
     for (int i = start_col; i < end_col; i++) {
         for (int j = static_cast<int>(height) - 1; j >= 0; j--) {
-            double u = static_cast<double>(i) / (width - 1);
-            double v = static_cast<double>(j) / (height - 1);
+            double u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);
+            double v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);
             Ray ray = _camera.ray(u, v);
             pixels[j][i] = traceRay(ray, 0);
         }
