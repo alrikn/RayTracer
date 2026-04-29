@@ -30,6 +30,8 @@ void testing_func()
 
     RayTracer::Scene scene(0.9, 4); //brightness, max_depth
 
+    scene.setheight(y_axis);
+    scene.setwidth(x_axis);
     // --- Center sphere ---
     auto center = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(0, 0, -1), 0.5);
