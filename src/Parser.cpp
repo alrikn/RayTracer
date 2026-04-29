@@ -144,6 +144,10 @@ std::shared_ptr<RayTracer::IShape> Parser::createSphere(const libconfig::Setting
         auto color = parseColor(shapeConfig.lookup("color"));
         sphere->setColor(color);
     }
+    if (shapeConfig.exists("reflectivity")) {
+        double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
+        sphere->setReflectivity(reflectivity);
+    }
     return sphere;
 }
 
@@ -157,6 +161,10 @@ std::shared_ptr<RayTracer::IShape> Parser::createPlane(const libconfig::Setting&
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
         plane->setColor(color);
+    }
+    if (shapeConfig.exists("reflectivity")) {
+        double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
+        plane->setReflectivity(reflectivity);
     }
     return plane;
 }
@@ -172,6 +180,10 @@ std::shared_ptr<RayTracer::IShape> Parser::createRectangle(const libconfig::Sett
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
         rectangle->setColor(color);
+    }
+    if (shapeConfig.exists("reflectivity")) {
+        double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
+        rectangle->setReflectivity(reflectivity);
     }
     return rectangle;
 }

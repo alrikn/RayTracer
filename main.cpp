@@ -92,7 +92,7 @@ int main()
 
     Parser parser;
 
-    parser.run_parser("Scene.cfg");
+    parser.run_parser("scene_config.cfg");
 
     RayTracer::Scene& scene = parser.getScene();
 

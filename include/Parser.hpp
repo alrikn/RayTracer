@@ -24,17 +24,20 @@ SHAPES:
     - origin (point3d) OBLIGATORY
     - radius (double) OBLIGATORY
     - color (color) OPTIONAL
+    - reflectibity (double) OPTIONAL
 
     plane:
     - normal (vector3d) OBLIGATORY
     - point (point3d) OBLIGATORY //might be optional in future haven't decided
     - color (color) OPTIONAL
+    - reflectibity (double) OPTIONAL
 
     rectangle:
     - origin (point3d) OBLIGATORY
     - bottom_side (vector3d) OBLIGATORY
     - left_side (vector3d) OBLIGATORY
     - color (color) OPTIONAL
+    - reflectibity (double) OPTIONAL
 
 LIGHTS:
     ambient:
