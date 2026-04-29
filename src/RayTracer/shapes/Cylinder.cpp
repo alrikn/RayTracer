@@ -35,14 +35,17 @@ where O is the origin of the ray, D is the direction of the ray and k is the dis
 r^2 = 0
 */
 
-std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const
+std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the problem with the current implementat
 {
+    std::optional<HitRecord> hit = std::nullopt;
     Math::Vector3d oc = ray.origin - center;
     double oc_proj = oc.dot(axis);
+    Math::Vector3d d_perp = ray.direction - (axis * ray.direction.dot(axis));
     Math::Vector3d oc_perp = oc - (axis * oc_proj);
-    double a = ray.direction.dot(ray.direction) - (ray.direction.dot(axis) * ray.direction.dot(axis));
-    double b = 2 * (ray.direction.dot(oc_perp) - (ray.direction.dot(axis) * oc_proj));
+    double a = d_perp.dot(d_perp);
+    double b = 2 * d_perp.dot(oc_perp);   // no extra term needed
     double c = oc_perp.dot(oc_perp) - (radius * radius);
+
     double discriminant = (b * b) - (4 * a * c);
 
     if (discriminant < 0) {
@@ -52,21 +55,21 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const
     double sqrtD = std::sqrt(discriminant);
     double k1 = (-b - sqrtD) / (2 * a);
     double k2 = (-b + sqrtD) / (2 * a);
-    double k = (k1 < k2) ? k1 : k2;
+    double k = (k1 < k2 && k1 > 0) ? k1 : k2;
     if (k < 0) {
         return std::nullopt;
     }
     Math::Point3d intersection = ray.origin + (ray.direction * k);
     double height_at_intersection = (intersection - center).dot(axis);
-    if (height_at_intersection < 0 || height_at_intersection > height) {
-        return std::nullopt;
+    if (height_at_intersection >= 0 && height_at_intersection <= height) {
+        HitRecord record;
+        record.point = intersection;
+        record.normal = (intersection - (center + axis * height_at_intersection)).normalize();
+        record.color = COLOR_MAP.at(getColor());
+        record.incomingDirection = ray.direction;
+        record.distance = k;
+        hit = record;
     }
-    HitRecord hit;
-    hit.point = intersection;
-    hit.normal = (intersection - center).normalize();
-    hit.color = COLOR_MAP.at(getColor());
-    hit.incomingDirection = ray.direction;
-    hit.distance = k;
     return hit;
 }
 }
