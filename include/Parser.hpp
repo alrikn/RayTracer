@@ -11,8 +11,9 @@
 #include "Enums.hpp"
 #include "IShape.hpp"
 #include "Scene.hpp"
-#include "Factory.hpp"
+#include <functional>
 #include <libconfig.h++>
+#include <map>
 #include <memory>
 
 
@@ -86,11 +87,13 @@ class Parser
         Math::Vector3d parseVector3d(const libconfig::Setting& array);
         Math::Point3d parsePoint3d(const libconfig::Setting& array);
         Color parseColor(const libconfig::Setting& string);
+        double parseDouble(const libconfig::Setting& setting);
     public:
         Parser();
 
 
         void run_parser(const std::string &filename);
+        RayTracer::Scene& getScene() { return *scene; }
         ~Parser() = default;
 
 };

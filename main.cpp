@@ -9,6 +9,7 @@
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
 #include "IShape.hpp"
+#include "Parser.hpp"
 #include "Scene.hpp"
 #include "Plane.hpp"
 #include "Rectangle.hpp"
@@ -86,6 +87,14 @@ void testing_func()
 
 int main()
 {
-    //to be replaced with the parser
-    testing_func();
+    //testing_func();
+
+
+    Parser parser;
+
+    parser.run_parser("Scene.cfg");
+
+    RayTracer::Scene& scene = parser.getScene();
+
+    scene.render(std::cout);
 }

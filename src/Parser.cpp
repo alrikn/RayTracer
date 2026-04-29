@@ -44,7 +44,17 @@ Parser::Parser()
 
 void Parser::run_parser(const std::string &filename)
 {
-    config.readFile(filename.c_str());
+    try {
+        config.readFile(filename.c_str());
+    } catch (const libconfig::FileIOException &fioex) {
+        std::cerr << "I/O error while reading file." << std::endl;
+        return;
+    } catch (const libconfig::ParseException &pex) {
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+                  << " - " << pex.getError() << std::endl;
+        return;
+    }
+    //config.readFile(filename.c_str()); //crashing immediately
 
     parseScene();
     parseCamera();
@@ -219,14 +229,27 @@ std::shared_ptr<RayTracer::ILight> Parser::createSpecularLight(const libconfig::
 
 /*the helper functions */
 
+double Parser::parseDouble(const libconfig::Setting& setting)
+{
+    double value = 0.0;
+    //we need to be able to parse both integers and doubles, as if we try to parse a float when its an int, we crash
+    try {
+        value = setting;
+    } catch (const libconfig::SettingTypeException&) {
+        int intValue = setting;
+        value = static_cast<double>(intValue);
+    }
+    return value;
+}
+
 Math::Vector3d Parser::parseVector3d(const libconfig::Setting& array)
 {
     if (array.getLength() != 3 || !array.isArray()) {
         throw std::runtime_error("Expected an array of length 3 for Vector3d");
     }
-    double x = array[0];
-    double y = array[1];
-    double z = array[2];
+    double x = parseDouble(array[0]);
+    double y = parseDouble(array[1]);
+    double z = parseDouble(array[2]);
     return Math::Vector3d(x, y, z);
 }
 
@@ -235,9 +258,9 @@ Math::Point3d Parser::parsePoint3d(const libconfig::Setting& array)
     if (array.getLength() != 3 || !array.isArray()) {
         throw std::runtime_error("Expected an array of length 3 for Point3d");
     }
-    double x = array[0];
-    double y = array[1];
-    double z = array[2];
+    double x = parseDouble(array[0]);
+    double y = parseDouble(array[1]);
+    double z = parseDouble(array[2]);
     return Math::Point3d(x, y, z);
 }
 
