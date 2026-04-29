@@ -64,7 +64,7 @@ using LightFactoryFunc = std::function<std::shared_ptr<RayTracer::ILight>(const 
 class Parser
 {
     private:
-        std::unique_ptr<RayTracer::Scene> scene; //the scene that will be rendered. the parser will fill this scene with objects and lights based on the input file
+        std::unique_ptr<RayTracer::Scene> scene = nullptr; //the scene that will be rendered. the parser will fill this scene with objects and lights based on the input file
         libconfig::Config config; //the config object
         std::map<std::string, ShapeFactoryFunc> shapeFactories;
         std::map<std::string, LightFactoryFunc> lightFactories;
@@ -94,6 +94,7 @@ class Parser
 
         void run_parser(const std::string &filename);
         RayTracer::Scene& getScene() { return *scene; }
+        bool ParseSuccess() const { return scene != nullptr; }
         ~Parser() = default;
 
 };
