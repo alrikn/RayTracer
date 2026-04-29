@@ -27,6 +27,7 @@ class Ashape : public IShape
     public:
         Ashape() = default;
         Ashape(const Math::Point3d& origin, ShapeType type) : shape_type(type), origin(origin) {};
+
         ~Ashape() = default;
 
         Math::Point3d origin;

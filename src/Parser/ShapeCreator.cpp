@@ -5,9 +5,12 @@
 ** ShapeCreator
 */
 
+#include "Cylinder.hpp"
+#include "IShape.hpp"
 #include "Parser.hpp"
 #include "Plane.hpp"
 #include "Sphere.hpp"
+#include <memory>
 
 /*now for the creation functions */
 
@@ -66,4 +69,24 @@ std::shared_ptr<RayTracer::IShape> Parser::createRectangle(const libconfig::Sett
         rectangle->setReflectivity(reflectivity);
     }
     return rectangle;
+}
+
+std::shared_ptr<RayTracer::IShape> Parser::createCylinder(const libconfig::Setting& shapeConfig)
+{
+    auto center = parsePoint3d(shapeConfig.lookup("origin"));
+    auto axis = parseVector3d(shapeConfig.lookup("axis"));
+    double radius = parseDouble(shapeConfig.lookup("radius"));
+    double height = parseDouble(shapeConfig.lookup("height"));
+
+    auto cylinder = std::make_shared<RayTracer::Cylinder>(center, axis, radius, height);
+
+    if (shapeConfig.exists("color")) {
+        auto color = parseColor(shapeConfig.lookup("color"));
+        cylinder->setColor(color);
+    }
+    if (shapeConfig.exists("reflectivity")) {
+        double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
+        cylinder->setReflectivity(reflectivity);
+    }
+    return cylinder;
 }

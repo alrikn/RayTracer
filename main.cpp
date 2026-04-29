@@ -14,6 +14,7 @@
 #include "Plane.hpp"
 #include "Rectangle.hpp"
 #include "Ashape.hpp"
+#include "Cylinder.hpp"
 #include "SpecularLight.hpp"
 #include "Sphere.hpp"
 #include "Point3d.hpp"
@@ -23,6 +24,7 @@
 
 //push test
 //testing made entirely by gibbidy. sue me
+//i wanna add a cylinder. 
 void testing_func()
 {
     int x_axis = 6000;
@@ -38,12 +40,23 @@ void testing_func()
     center->setColor(RED);
     scene.addShape(center);
 
+    //If i wanted the cylinder to be visible the x would be 
+    auto cylinder = std::make_shared<RayTracer::Cylinder>(
+        Math::Point3d(-1, 0, -1.5), // base center
+        Math::Vector3d(-1, 0, 0),    // axis
+        0.5,                        // radius
+        0.4                         // height
+    );
+    cylinder->setColor(MAGENTA);
+    scene.addShape(cylinder);
+    /*
     // --- Left sphere ---
     auto left = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(-1.0, 0, -1.5), 0.5);
     left->setColor(BLUE);
     scene.addShape(left);
 
+    */
     // --- Right sphere ---
     auto right = std::make_shared<RayTracer::Sphere>(
         Math::Point3d(1.0, 0, -1.5), 0.5);

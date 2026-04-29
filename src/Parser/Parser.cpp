@@ -29,6 +29,9 @@ Parser::Parser()
     shapeFactories["rectangle"] = [this](const libconfig::Setting& shapeConfig) {
         return createRectangle(shapeConfig);
     };
+    shapeFactories["cylinder"] = [this](const libconfig::Setting& shapeConfig) {
+        return createCylinder(shapeConfig);
+    };
 
     //light factory
     lightFactories["ambient"] = [this](const libconfig::Setting& lightConfig) {

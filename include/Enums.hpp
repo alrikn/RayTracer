@@ -41,6 +41,7 @@ enum ShapeType {
     SPHERE,
     PLANE,
     RECTANGLE,
+    CYLINDER,
     //CAMERA, for now the camera will be hardcoded, but eventually it will have to be parsed
 };
 
