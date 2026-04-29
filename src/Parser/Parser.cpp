@@ -79,7 +79,7 @@ void Parser::parseScene()
 
     scene = std::make_unique<RayTracer::Scene>(brightness, max_depth);
 
-    RayTracer::Camera camera( //for now hardcoded. TODO: fix this
+    RayTracer::Camera camera( //for now hardcoded. TODO: fix this in issue #10
         Math::Point3d(0, 1, 1), // move camera up and slightly back
     RayTracer::Rectangle(
         Math::Point3d(-3, -1.5, -1), // shift screen downward

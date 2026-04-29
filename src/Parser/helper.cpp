@@ -47,14 +47,10 @@ Math::Point3d Parser::parsePoint3d(const libconfig::Setting& array)
 Color Parser::parseColor(const libconfig::Setting& string)
 {
     std::string colorStr = string.c_str();
-    //TODO: MAKE A MAP
-    if (colorStr == "red") return RED;
-    if (colorStr == "green") return GREEN;
-    if (colorStr == "blue") return BLUE;
-    if (colorStr == "white") return WHITE;
-    if (colorStr == "black") return BLACK;
-    if (colorStr == "yellow") return YELLOW;
-    // Add more colors as needed
-    std::cerr << "Unknown color: " << colorStr << ". Defaulting to white." << std::endl;
-    return WHITE; // default color
+    auto it = COLOR_MAP.find(colorStr);
+    if (it != COLOR_MAP.end()) {
+        return it->second;
+    } else {
+        throw std::runtime_error("Unknown color: " + colorStr);
+    }
 }

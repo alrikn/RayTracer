@@ -9,6 +9,8 @@
     #define INCLUDED_ENUMS_HPP
 
 //these be a few colors shapes can be at (only main colors)
+#include <map>
+#include <string>
 enum Color {
     RED,
     GREEN,
@@ -18,6 +20,17 @@ enum Color {
     CYAN,
     WHITE,
     BLACK,
+};
+
+const std::map<std::string, Color> COLOR_MAP = {
+    {"red", RED},
+    {"green", GREEN},
+    {"blue", BLUE},
+    {"yellow", YELLOW},
+    {"magenta", MAGENTA},
+    {"cyan", CYAN},
+    {"white", WHITE},
+    {"black", BLACK}
 };
 
 
