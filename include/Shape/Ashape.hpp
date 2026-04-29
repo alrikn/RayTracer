@@ -25,6 +25,7 @@ class Ashape : public IShape
     public:
         Ashape() = default;
         Ashape(const Math::Point3d& center) : center(center) {};
+
         ~Ashape() = default;
 
         Math::Point3d center;
