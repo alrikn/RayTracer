@@ -22,6 +22,11 @@ class Scene
     private:
         std::vector<std::shared_ptr<IShape>> _objects;
         std::vector<std::shared_ptr<ILight>> _lights;
+
+        Camera _camera;
+        unsigned int width = 4000; //width of the output image
+        unsigned int height = 2000; //height of the output image
+
         double brightness = 1.0; //global brightness. max is one, min is 0. it just touches final color values, doesn't touch lights.
 
         const int max_depth = 4; //max recursion
@@ -38,7 +43,11 @@ class Scene
         void addShape(const std::shared_ptr<IShape> &object);
         void addLight(const std::shared_ptr<ILight> &light);
         Math::Vector3d traceRay(const Ray &ray, int depth) const; //overloaded func
-        void render(const Camera &camera, int width, int height, std::ostream &output) const;
+        void render(std::ostream &output) const;
+
+        void setCamera(const Camera &camera) { _camera = camera; }
+        void setwidth(unsigned int w) { width = w; }
+        void setheight(unsigned int h) { height = h; }
 };
 }
 

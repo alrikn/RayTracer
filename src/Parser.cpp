@@ -54,12 +54,17 @@ void Parser::run_parser(const std::string &filename)
 
 void Parser::parseScene()
 {
+    //for now hardcoded, in the future it won't be
+
     scene = std::make_unique<RayTracer::Scene>(0.9, 4); //for now hardcoded, in the future it won't be
 }
 
 void Parser::parseCamera()
 {
     //for now hardcoded, in the future it won't be
+    width = 4000; //this will be used to design better camera, so that the width and height of rectangle is based on this
+    height = 2000;
+
     RayTracer::Camera camera(
         Math::Point3d(0, 1, 1), // move camera up and slightly back
     RayTracer::Rectangle(
@@ -68,6 +73,9 @@ void Parser::parseCamera()
         Math::Vector3d(0, 3, 0)
         )
     );
+    scene->setwidth(width);
+    scene->setheight(height);
+    scene->setCamera(camera);
 }
 
 void Parser::parseShapes()
@@ -113,42 +121,6 @@ void Parser::parseLights()
 
 /*now for the creation functions */
 
-
-/*
-SHAPES:
-    sphere:
-    - origin (point3d) OBLIGATORY
-    - radius (double) OBLIGATORY
-    - color (color) OPTIONAL
-
-    plane:
-    - normal (vector3d) OBLIGATORY
-    - point (point3d) OBLIGATORY //might be optional in future haven't decided
-    - color (color) OPTIONAL
-
-    rectangle:
-    - origin (point3d) OBLIGATORY
-    - bottom_side (vector3d) OBLIGATORY
-    - left_side (vector3d) OBLIGATORY
-    - color (color) OPTIONAL
-
-LIGHTS:
-    ambient:
-    - brightness (double) OBLIGATORY
-    - color (vector3d) OPTIONAL //for the lights its a vector3d because i want the user to have more control
-
-    directional:
-    - direction (vector3d) OBLIGATORY
-    - brightness (double) OBLIGATORY
-    - color (vector3d) OPTIONAL
-
-    specular:
-    - direction (vector3d) OBLIGATORY
-    - brightness (double) OBLIGATORY
-    - shininess (double) OBLIGATORY
-    - specular_strength (double) OBLIGATORY
-    - color (vector3d) OPTIONAL
-*/
 
 std::shared_ptr<RayTracer::IShape> Parser::createSphere(const libconfig::Setting& shapeConfig)
 {

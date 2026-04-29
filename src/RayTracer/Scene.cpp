@@ -108,7 +108,7 @@ void Scene::write_color(const Math::Vector3d &color, std::string &output) const
     output += std::to_string(r) + " " + std::to_string(g) + " " + std::to_string(b) + "\n";
 }
 
-void Scene::render(const Camera &camera, int width, int height, std::ostream &output) const
+void Scene::render(std::ostream &output) const
 {
     std::string _final_output = "P3\n" + std::to_string(width) + " " + std::to_string(height) + "\n255\n";
 
@@ -121,10 +121,10 @@ void Scene::render(const Camera &camera, int width, int height, std::ostream &ou
             std::cerr << "\rRendering: " << percentage << "%";
         }
 
-        for (int i = 0; i < width; i++) {
+        for (unsigned int i = 0; i < width; i++) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
-            Ray ray = camera.ray(u, v);
+            Ray ray = _camera.ray(u, v);
             Math::Vector3d color = traceRay(ray, 0);
             write_color(color, _final_output);
         }

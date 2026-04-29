@@ -46,8 +46,10 @@ LIGHTS:
     - color (vector3d) OPTIONAL
 
     specular:
-    - position (point3d) OBLIGATORY
+    - direction (vector3d) OBLIGATORY
     - brightness (double) OBLIGATORY
+    - shininess (double) OBLIGATORY
+    - specular_strength (double) OBLIGATORY
     - color (vector3d) OPTIONAL
 */
 
@@ -62,6 +64,8 @@ class Parser
         libconfig::Config config; //the config object
         std::map<std::string, ShapeFactoryFunc> shapeFactories;
         std::map<std::string, LightFactoryFunc> lightFactories;
+        unsigned int width = 4000; //width of the output image
+        unsigned int height = 2000; //height of the output image
         void parseScene();
         void parseCamera(); //will have to be hardcoded
         void parseShapes();

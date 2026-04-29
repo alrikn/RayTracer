@@ -35,7 +35,7 @@ CPPFLAGS = -I include -I include/Shape -I include/Light -I include/Math
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(NAME) $(OBJ) -lconfig++
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@

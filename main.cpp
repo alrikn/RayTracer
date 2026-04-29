@@ -81,7 +81,7 @@ void testing_func()
     );
 
     // --- Render ---
-    scene.render(camera, x_axis, y_axis, std::cout);
+    scene.render(std::cout);
 }
 
 int main()
