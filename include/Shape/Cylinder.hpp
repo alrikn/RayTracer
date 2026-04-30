@@ -25,10 +25,17 @@ class Cylinder : public Ashape
         double radius = 0;
         double height = 0;
 
-        Cylinder();
-        Cylinder(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center, CYLINDER), axis(axis), radius(radius), height(height) {};
+        //Cylinder();
+        Cylinder(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center, CYLINDER), axis(axis.normalize()), radius(radius), height(height) {};
         ~Cylinder() = default;
+
+
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
+        //helper funcs
+        std::optional<HitRecord> check_cylinder_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const;
+
+        std::optional<HitRecord> check_front_cap_hit(const RayTracer::Ray& ray, std::optional<HitRecord> hit, double t_cap) const;
+        std::optional<HitRecord> check_back_cap_hit(const RayTracer::Ray& ray, std::optional<HitRecord> hit, double t_cap, const Math::Point3d& top_center) const;
 };
 
 }
