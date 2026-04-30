@@ -14,14 +14,15 @@
 
 NAME = raytracer
 SRC = main.cpp	\
-	src/positions/Vector3d.cpp	\
-	src/positions/Point3d.cpp	\
+	src/Positions/Vector3d.cpp	\
+	src/Positions/Point3d.cpp	\
 	src/RayTracer/shapes/Rectangle.cpp	\
 	src/RayTracer/shapes/Sphere.cpp	\
 	src/RayTracer/shapes/Plane.cpp	\
 	src/RayTracer/shapes/Cylinder.cpp	\
 	src/RayTracer/Camera.cpp	\
-	src/RayTracer/Scene.cpp	\
+	src/RayTracer/scene/Raytracing.cpp \
+	src/RayTracer/scene/ThreadManagement.cpp	\
 	src/RayTracer/lights/DirectionalLight.cpp	\
 	src/RayTracer/lights/AmbientLight.cpp	\
 	src/RayTracer/lights/SpecularLight.cpp   \
