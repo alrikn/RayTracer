@@ -38,6 +38,7 @@ r^2 = 0
 std::optional<HitRecord> Cylinder::check_cylinder_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const
 {
     std::optional<HitRecord> hit = std::nullopt;
+
     double sqrtD = std::sqrt(discriminant);
     double k1 = (-b - sqrtD) / (2 * a);
     double k2 = (-b + sqrtD) / (2 * a);
@@ -117,6 +118,9 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
     }
     //front cap intersection.
     double denom = ray.direction.dot(axis);
+    if (std::abs(denom) < 1e-6) {
+        return hit; // ray is parallel to the caps, no need to check them
+    }
     double t_cap = (origin - ray.origin).dot(axis) / denom;
     if (t_cap > 0) {
         hit = check_front_cap_hit(ray, hit, t_cap);
