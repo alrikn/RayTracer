@@ -54,3 +54,12 @@ Color Parser::parseColor(const libconfig::Setting& string)
         throw std::runtime_error("Unknown color: " + colorStr);
     }
 }
+
+bool Parser::parseBool(const libconfig::Setting& setting)
+{
+    try {
+        return static_cast<bool>(setting);
+    } catch (const libconfig::SettingTypeException&) {
+        throw std::runtime_error("Expected a boolean value");
+    }
+}

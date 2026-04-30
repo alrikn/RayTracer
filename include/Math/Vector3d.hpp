@@ -28,6 +28,7 @@ class Vector3d
 
         //dot product of this vector with another vector
         double dot(const Vector3d &other) const;
+        Vector3d cross(const Vector3d &other) const; //cross product of this vector with another vector
 
         void translate(const Vector3d &translation);
         void rotateX(double angle);

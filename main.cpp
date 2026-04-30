@@ -5,105 +5,14 @@
 ** main
 */
 
-#include "AmbientLight.hpp"
-#include "Camera.hpp"
-#include "DirectionalLight.hpp"
-#include "IShape.hpp"
+
 #include "Parser.hpp"
 #include "Scene.hpp"
-#include "Plane.hpp"
-#include "Rectangle.hpp"
-#include "Ashape.hpp"
-#include "Cylinder.hpp"
-#include "SpecularLight.hpp"
-#include "Sphere.hpp"
-#include "Point3d.hpp"
-#include "Vector3d.hpp"
-#include <memory>
 
 
-//push test
-//testing made entirely by gibbidy. sue me
-//i wanna add a cylinder. 
-void testing_func()
-{
-    int x_axis = 6000;
-    int y_axis = 3000;
-
-    RayTracer::Scene scene(0.9, 4); //brightness, max_depth
-
-    scene.setheight(y_axis);
-    scene.setwidth(x_axis);
-    // --- Center sphere ---
-    auto center = std::make_shared<RayTracer::Sphere>(
-        Math::Point3d(0, 0, -1), 0.5);
-    center->setColor(RED);
-    scene.addShape(center);
-
-    //If i wanted the cylinder to be visible the x would be 
-    auto cylinder = std::make_shared<RayTracer::Cylinder>(
-        Math::Point3d(-1, 0, -1.5), // base center
-        Math::Vector3d(-1, 0, 0),    // axis
-        0.5,                        // radius
-        0.4                         // height
-    );
-    cylinder->setColor(MAGENTA);
-    scene.addShape(cylinder);
-    /*
-    // --- Left sphere ---
-    auto left = std::make_shared<RayTracer::Sphere>(
-        Math::Point3d(-1.0, 0, -1.5), 0.5);
-    left->setColor(BLUE);
-    scene.addShape(left);
-
-    */
-    // --- Right sphere ---
-    auto right = std::make_shared<RayTracer::Sphere>(
-        Math::Point3d(1.0, 0, -1.5), 0.5);
-    right->setColor(GREEN);
-    scene.addShape(right);
-
-    // --- Small sphere (closer) ---
-    auto small = std::make_shared<RayTracer::Sphere>(
-        Math::Point3d(0.3, -0.3, -0.5), 0.2);
-    small->setColor(YELLOW);
-    scene.addShape(small);
-
-    auto ground = std::make_shared<RayTracer::Plane>(
-        Math::Vector3d(0, 1, 0),      // upward normal
-        Math::Point3d(0, -0.5, 0)   // point on plane
-    );
-    ground->setColor(WHITE);
-    ground->setReflectivity(0.15); //make the ground slightly less reflective
-    scene.addShape(ground);
-
-    // --- Light ---
-    scene.addLight(std::make_shared<RayTracer::DirectionalLight>(
-        Math::Vector3d(-1, -1, -1), 0.8));
-    scene.addLight(std::make_shared<RayTracer::SpecularLight>(
-        Math::Vector3d(-1, -1, -1), 1.0, 128.0, 1.0));
-    scene.addLight(std::make_shared<RayTracer::AmbientLight>(0.8));
-
-    //Camera() {screen = Rectangle(Math::Point3d(-2, -1, -1), Math::Vector3d(4, 0, 0), Math::Vector3d(0, 2, 0));};
-    //Camera(const Math::Point3d& origin, const Rectangle& screen) : origin(origin), screen(screen) {};
-
-    RayTracer::Camera camera(
-        Math::Point3d(0, 1, 1), // move camera up and slightly back
-    RayTracer::Rectangle(
-        Math::Point3d(-3, -1.5, -1), // shift screen downward
-        Math::Vector3d(6, 0, 0),
-        Math::Vector3d(0, 3, 0)
-        )
-    );
-
-    // --- Render ---
-    scene.render(std::cout);
-}
 
 int main()
 {
-    //testing_func();
-
 
     Parser parser;
 

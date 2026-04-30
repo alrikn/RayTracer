@@ -49,6 +49,10 @@ std::shared_ptr<RayTracer::IShape> Parser::createPlane(const libconfig::Setting&
         double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
         plane->setReflectivity(reflectivity);
     }
+    if (shapeConfig.exists("chessboard_pattern")) {
+        bool chessboard_pattern = parseBool(shapeConfig.lookup("chessboard_pattern"));
+        plane->setChessboardPattern(chessboard_pattern);
+    }
     return plane;
 }
 

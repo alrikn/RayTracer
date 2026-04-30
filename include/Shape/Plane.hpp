@@ -20,13 +20,15 @@ class Plane : public Ashape
 {
     private:
         Math::Vector3d normal; //the normal vector of the plane
-        //double d; //the distance from the origin to the plane along the normal vector
+        bool chessboard_pattern = false; //whether the plane has a chessboard pattern or not
 
     public:
         Plane(Math::Vector3d new_normal = Math::Vector3d(0, 1, 0), Math::Point3d point = Math::Point3d(0, 0, 0)) : Ashape(point, ShapeType::PLANE), normal(new_normal.normalize())  {};
         ~Plane() = default;
 
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
+
+        void setChessboardPattern(bool enabled) { chessboard_pattern = enabled; }
 
 
 
