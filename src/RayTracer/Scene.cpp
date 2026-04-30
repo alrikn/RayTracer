@@ -60,11 +60,9 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
     for (const auto& object : _objects) {
         auto hit = object->hits(ray);
         if (hit.has_value() && (hit->distance > epsilon) && (hit->distance < closest_distance)) {
-            hit->color = COLOR_MAP.at(object->getColor()); //set the color of the hit record to the color of the object that was hit
             closest_hit = hit;
             closest_distance = hit->distance;
             closest_object = object.get();
-            hit->incomingDirection = ray.direction; //set the ray direction in the hit record for later use in lighting calculations
         }
     }
 
@@ -93,14 +91,14 @@ Math::Vector3d Scene::traceRay(const Ray &ray, int depth) const
 
     //now we create the reflected ray and trace it to get the color contribution from the reflected ray
     Ray reflected_ray(closest_hit->point + normal * epsilon, reflected_dir); //offset
-    Math::Vector3d reflected_color = traceRay(reflected_ray, depth + 1); //trace the reflected ray and get its color contribution
+    Math::Vector3d reflected_light = traceRay(reflected_ray, depth + 1); //trace the reflected ray and get its color contribution
 
     //we really need a reflectivity value for the objects but oh well
 
     //TODO; find smth better instead of an addirion here.
-    Math::Vector3d result_color = light_at_point + (reflected_color * closest_object->getReflectivity()); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
-    result_color = Math::Vector3d(clamp_color(result_color.x), clamp_color(result_color.y), clamp_color(result_color.z));
-    return (result_color); //combine the object color and the reflected color contribution
+    Math::Vector3d final_light = light_at_point + (reflected_light * closest_object->getReflectivity()); //combine the object color and the reflected color contribution (0.5 to avoid making everything a mirror)
+    final_light = Math::Vector3d(clamp_color(final_light.x), clamp_color(final_light.y), clamp_color(final_light.z));
+    return (final_light); //combine the object color and the reflected color contribution
 }
 
 void Scene::write_color(const std::array<uint8_t, 3> &color, std::string &output) const
