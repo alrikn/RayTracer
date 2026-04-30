@@ -89,6 +89,7 @@ class Parser
         Math::Point3d parsePoint3d(const libconfig::Setting& array);
         Color parseColor(const libconfig::Setting& string);
         double parseDouble(const libconfig::Setting& setting);
+        bool parseBool(const libconfig::Setting& setting);
     public:
         Parser();
 
