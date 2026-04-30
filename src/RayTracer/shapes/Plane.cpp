@@ -42,10 +42,26 @@ std::optional<HitRecord> Plane::hits(const RayTracer::Ray& ray) const
 
     //now that we know for sure that we hit the plane we can check for checkerboard
 
+    Math::Vector3d u;
+
+    // pick something not parallel to the normal (if smth is too aligned to x axis, we use y axis)
+    if (std::abs(normal.x) > 0.9)
+        u = Math::Vector3d(0, 1, 0).cross(normal).normalize();
+    else
+        u = Math::Vector3d(1, 0, 0).cross(normal).normalize();
+
+    Math::Vector3d v = normal.cross(u); // already perpendicular
+
+    Math::Vector3d local = hit.point - origin;
+
+    double u_coord = local.dot(u);
+    double v_coord = local.dot(v);
+
     int checker_size = 1; //size of the checker squares
-    int x = static_cast<int>(std::floor(hit.point.x / checker_size));
-    int z = static_cast<int>(std::floor(hit.point.z / checker_size));
-    if ((x + z) % 2 == 0) {
+    int x = static_cast<int>(std::floor(u_coord / checker_size));
+    int y = static_cast<int>(std::floor(v_coord / checker_size));
+
+    if ((x + y) % 2 == 0) {
         hit.color = COLOR_MAP.at(getColor()); //color of the plane
     } else {
         hit.color = Math::Vector3d(255, 255, 255) - COLOR_MAP.at(getColor()); //inverse color for the checker pattern

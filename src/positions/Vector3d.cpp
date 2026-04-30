@@ -30,6 +30,15 @@ double Vector3d::dot(const Vector3d &other) const
     return (x * other.x) + (y * other.y) + (z * other.z);
 }
 
+Vector3d Vector3d::cross(const Vector3d &other) const
+{
+    return Vector3d(
+        (y * other.z) - (z * other.y),
+        (z * other.x) - (x * other.z),
+        (x * other.y) - (y * other.x)
+    );
+}
+
 void Vector3d::translate(const Vector3d &translation)
 {
     this->x += translation.x;
