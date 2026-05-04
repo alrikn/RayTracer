@@ -89,6 +89,9 @@ class Parser
         std::shared_ptr<RayTracer::ILight> createDirectionalLight(const libconfig::Setting& lightConfig);
         std::shared_ptr<RayTracer::ILight> createSpecularLight(const libconfig::Setting& lightConfig);
 
+        //now the funcs to populate the aaFactories map.
+        std::unique_ptr<RayTracer::IAntiAliasing> createSupersampling(const libconfig::Setting& cfg);
+
 
         //a few helper funcs for parsing:
         Math::Vector3d parseVector3d(const libconfig::Setting& array);

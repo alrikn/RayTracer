@@ -6,7 +6,6 @@
 */
 
 #include "Parser.hpp"
-#include "AntiAliasing/Supersampling.hpp"
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 #include "ILight.hpp"
@@ -37,19 +36,7 @@ Parser::Parser()
     };
 
     aaFactories["supersampling"] = [this](const libconfig::Setting &cfg) {
-        int samples = 4;
-        if (cfg.exists("samples"))
-            samples = static_cast<int>(parseDouble(cfg.lookup("samples")));
-        if (samples < 1)
-            throw std::runtime_error("[Antialiasing] samples must be >= 1, got " + std::to_string(samples));
-        int sqrtN = static_cast<int>(std::sqrt(static_cast<double>(samples)));
-        int rounded = sqrtN * sqrtN;
-        if (rounded != samples) {
-            std::cerr << "[Antialiasing] samples=" << samples
-                      << " is not a perfect square. Rounded down to " << rounded << ".\n";
-            samples = rounded;
-        }
-        return std::make_unique<RayTracer::Supersampling>(samples);
+        return createSupersampling(cfg);
     };
 
     //light factory

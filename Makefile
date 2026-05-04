@@ -29,6 +29,7 @@ SRC = main.cpp	\
 	src/Parser/Parser.cpp	\
 	src/Parser/LightCreator.cpp \
 	src/Parser/ShapeCreator.cpp \
+	src/Parser/AACreator.cpp \
 	src/Parser/helper.cpp \
 	src/AntiAliasing/Supersampling.cpp
 
