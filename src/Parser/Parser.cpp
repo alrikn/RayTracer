@@ -35,6 +35,10 @@ Parser::Parser()
         return createCylinder(shapeConfig);
     };
 
+    aaFactories["supersampling"] = [this](const libconfig::Setting &cfg) {
+        return createSupersampling(cfg);
+    };
+
     //light factory
     lightFactories["ambient"] = [this](const libconfig::Setting& lightConfig) {
         return createAmbientLight(lightConfig);
@@ -65,6 +69,7 @@ void Parser::run_parser(const std::string &filename)
     parseCamera();
     parseShapes();
     parseLights();
+    parseAntiAliasing();
 }
 
 void Parser::parseScene()
@@ -192,6 +197,28 @@ void Parser::parseLights()
             std::cerr << "Unknown light type: " << type << std::endl;
         }
     }
+}
+
+void Parser::parseAntiAliasing()
+{
+    const libconfig::Setting &sceneConfig = config.lookup("scene");
+    if (!sceneConfig.exists("antialiasing"))
+        return;
+
+    const libconfig::Setting &aaCfg = sceneConfig.lookup("antialiasing");
+    std::string technique;
+    if (!aaCfg.lookupValue("technique", technique))
+        throw std::runtime_error("[Antialiasing] Missing required 'technique' key.");
+
+    auto it = aaFactories.find(technique);
+    if (it == aaFactories.end()) {
+        std::string available = "[Antialiasing] Unknown technique: " + technique + "\nAvailable techniques:\n";
+        for (auto jt = aaFactories.begin(); jt != aaFactories.end(); ++jt)
+            available += "  - " + jt->first + "\n";
+        throw std::runtime_error(available);
+    }
+
+    scene->setAA(it->second(aaCfg));
 }
 
 
