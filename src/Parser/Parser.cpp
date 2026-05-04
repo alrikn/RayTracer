@@ -97,10 +97,16 @@ void Parser::parseCamera()
     Math::Point3d origin = parsePoint3d(cameraConfig.lookup("origin"));
     Math::Vector3d direction = parseVector3d(cameraConfig.lookup("direction"));
     double zoom = parseDouble(cameraConfig.lookup("zoom"));
-    // --- 1. Normalize forward direction ---
+    //
     Math::Vector3d forward = direction.normalize();
 
-    // --- 2. Build orthonormal basis (right, up) ---
+    //we build the orthonormal basis for the camera, 
+    // which is used to calculate the screen rectangle. 
+    // we need to find two vectors that are perpendicular to the forward vector and to each other. 
+    // we can use the cross product to find these vectors. 
+    // we also need to handle the case where the forward vector is parallel to the world up vector,
+    //  in which case we can use a different world up vector 
+    // to avoid getting a zero vector from the cross product.
     Math::Vector3d worldUp(0, 1, 0);
 
     // Handle edge case: camera looking almost straight up/down
@@ -110,29 +116,29 @@ void Parser::parseCamera()
     Math::Vector3d right = forward.cross(worldUp).normalize();
     Math::Vector3d up = right.cross(forward).normalize();
 
-    // --- 3. Aspect ratio ---
+    //the aspect ratio of screen is based on scene width height, so that its not distorted
     double aspect = static_cast<double>(scene_width) /
                     static_cast<double>(scene_height);
 
-    // --- 4. Screen size from zoom ---
+    //da zoom
     // (zoom = "how close the screen is", bigger zoom = smaller screen)
     double screenHeight = 1.0 / zoom;
     double screenWidth = screenHeight * aspect;
 
-    // --- 5. Distance from camera to screen ---
+    //distance from camera to screen
     double focalDistance = 1.0;
 
-    Math::Point3d center = origin + forward * focalDistance;
+    Math::Point3d center = origin + (forward * focalDistance);
 
-    // --- 6. Rectangle axes ---
+    //rectangle axes
     Math::Vector3d horizontal = right * screenWidth;
     Math::Vector3d vertical   = up * screenHeight;
 
-    // --- 7. Bottom-left corner of the screen ---
+    //bottom left corner of the screen rectangle.
+    // we calculate this by starting at the center of the screen and then moving left by half the horizontal vector and down by half the vertical vector.
     Math::Point3d bottomLeft =
         center - (horizontal / 2.0) - (vertical / 2.0);
 
-    // --- 8. Build camera ---
     RayTracer::Rectangle screen(
         bottomLeft,
         horizontal,
