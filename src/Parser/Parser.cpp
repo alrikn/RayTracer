@@ -220,10 +220,8 @@ void Parser::parseAntiAliasing()
 
     const libconfig::Setting &aaCfg = sceneConfig.lookup("antialiasing");
     std::string technique;
-    if (!aaCfg.lookupValue("technique", technique)) {
-        std::cerr << "[Antialiasing] Missing 'technique' key.\n";
-        return;
-    }
+    if (!aaCfg.lookupValue("technique", technique))
+        throw std::runtime_error("[Antialiasing] Missing required 'technique' key.");
 
     auto it = aaFactories.find(technique);
     if (it == aaFactories.end()) {
