@@ -6,6 +6,7 @@
 */
 
 #include "Parser.hpp"
+#include "AntiAliasing/Supersampling.hpp"
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 #include "ILight.hpp"
@@ -33,6 +34,20 @@ Parser::Parser()
     };
     shapeFactories["cylinder"] = [this](const libconfig::Setting& shapeConfig) {
         return createCylinder(shapeConfig);
+    };
+
+    aaFactories["supersampling"] = [this](const libconfig::Setting &cfg) {
+        int samples = 4;
+        if (cfg.exists("samples"))
+            samples = static_cast<int>(parseDouble(cfg.lookup("samples")));
+        int sqrtN = static_cast<int>(std::sqrt(static_cast<double>(samples)));
+        int rounded = sqrtN * sqrtN;
+        if (rounded != samples) {
+            std::cerr << "[Antialiasing] samples=" << samples
+                      << " is not a perfect square. Rounded down to " << rounded << ".\n";
+            samples = rounded;
+        }
+        return std::make_unique<RayTracer::Supersampling>(samples);
     };
 
     //light factory
@@ -65,6 +80,7 @@ void Parser::run_parser(const std::string &filename)
     parseCamera();
     parseShapes();
     parseLights();
+    parseAntiAliasing();
 }
 
 void Parser::parseScene()
@@ -192,6 +208,33 @@ void Parser::parseLights()
             std::cerr << "Unknown light type: " << type << std::endl;
         }
     }
+}
+
+void Parser::parseAntiAliasing()
+{
+    const libconfig::Setting &sceneConfig = config.lookup("scene");
+    if (!sceneConfig.exists("antialiasing"))
+        return;
+
+    const libconfig::Setting &aaCfg = sceneConfig.lookup("antialiasing");
+    std::string technique;
+    if (!aaCfg.lookupValue("technique", technique)) {
+        std::cerr << "[Antialiasing] Missing 'technique' key.\n";
+        return;
+    }
+
+    auto it = aaFactories.find(technique);
+    if (it == aaFactories.end()) {
+        std::cerr << "[Antialiasing] Unknown technique: " << technique << ". Available: ";
+        for (auto jt = aaFactories.begin(); jt != aaFactories.end(); ++jt) {
+            if (jt != aaFactories.begin()) std::cerr << ", ";
+            std::cerr << jt->first;
+        }
+        std::cerr << "\n";
+        return;
+    }
+
+    scene->setAA(it->second(aaCfg));
 }
 
 

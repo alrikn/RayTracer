@@ -8,6 +8,7 @@
 #ifndef INCLUDED_PARSER_HPP
     #define INCLUDED_PARSER_HPP
 
+#include "AntiAliasing/IAntiAliasing.hpp"
 #include "Enums.hpp"
 #include "IShape.hpp"
 #include "Scene.hpp"
@@ -61,6 +62,8 @@ using ShapeFactoryFunc = std::function<std::shared_ptr<RayTracer::IShape>(const 
 
 using LightFactoryFunc = std::function<std::shared_ptr<RayTracer::ILight>(const libconfig::Setting& lightConfig)>;
 
+using AAFactoryFunc = std::function<std::unique_ptr<RayTracer::IAntiAliasing>(const libconfig::Setting &cfg)>;
+
 class Parser
 {
     private:
@@ -68,10 +71,12 @@ class Parser
         libconfig::Config config; //the config object
         std::map<std::string, ShapeFactoryFunc> shapeFactories;
         std::map<std::string, LightFactoryFunc> lightFactories;
+        std::map<std::string, AAFactoryFunc> aaFactories;
         void parseScene();
         void parseCamera();
         void parseShapes();
         void parseLights();
+        void parseAntiAliasing();
 
         //now the funcs to populate the shapeFactories map.
         std::shared_ptr<RayTracer::IShape> createSphere(const libconfig::Setting& shapeConfig);
