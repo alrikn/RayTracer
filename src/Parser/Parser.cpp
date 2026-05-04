@@ -40,6 +40,8 @@ Parser::Parser()
         int samples = 4;
         if (cfg.exists("samples"))
             samples = static_cast<int>(parseDouble(cfg.lookup("samples")));
+        if (samples < 1)
+            throw std::runtime_error("[Antialiasing] samples must be >= 1, got " + std::to_string(samples));
         int sqrtN = static_cast<int>(std::sqrt(static_cast<double>(samples)));
         int rounded = sqrtN * sqrtN;
         if (rounded != samples) {
