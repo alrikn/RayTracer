@@ -48,7 +48,7 @@ class Scene
         void renderChunk(std::vector<std::vector<std::array<uint8_t, 3>>> &pixels, std::atomic<int> &columns_rendered, std::mutex &cerr_mutex, int start_col, int end_col) const;
         std::string serializeBuffer(const std::vector<std::vector<std::array<uint8_t, 3>>> &pixels) const;
     public:
-    Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth), _aaMethod(nullptr) {}
+        Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth), _aaMethod(nullptr) {}
         ~Scene() = default;
 
         void addShape(const std::shared_ptr<IShape> &object);
