@@ -13,19 +13,19 @@ Math::Vector3d Supersampling::computePixel(
     std::function<Math::Vector3d(const Ray &, int)> traceRay
 ) const
 {
-    thread_local std::mt19937 rng(std::random_device{}());
+    thread_local std::mt19937 rng(std::random_device{}()); //thread_local so each thread has its own RNG state, avoiding data races without needing a mutex
     thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
 
     int sqrtN = static_cast<int>(std::sqrt(static_cast<double>(_samples)));
     Math::Vector3d accumulated(0, 0, 0);
-    double uStep = width > 1 ? 1.0 / static_cast<double>(width - 1) : 0.0;
-    double vStep = height > 1 ? 1.0 / static_cast<double>(height - 1) : 0.0;
+    double uStep = width > 1 ? 1.0 / static_cast<double>(width - 1) : 0.0; //zero fallback prevents division by zero for 1-pixel-wide renders
+    double vStep = height > 1 ? 1.0 / static_cast<double>(height - 1) : 0.0; //same for height
 
     for (int sy = 0; sy < sqrtN; sy++) {
         for (int sx = 0; sx < sqrtN; sx++) {
-            double jx = (sx + dist(rng)) / sqrtN;
+            double jx = (sx + dist(rng)) / sqrtN; //random position inside cell sx, in [sx/sqrtN, (sx+1)/sqrtN)
             double jy = (sy + dist(rng)) / sqrtN;
-            double su = base_u + (jx - 0.5) * uStep;
+            double su = base_u + (jx - 0.5) * uStep; //subtract 0.5 to center the jitter around the pixel, not offset to one side
             double sv = base_v + (jy - 0.5) * vStep;
             accumulated = accumulated + traceRay(camera.ray(su, sv), 0);        
         }
