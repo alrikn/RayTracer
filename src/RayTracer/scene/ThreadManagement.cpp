@@ -50,10 +50,20 @@ void Scene::renderChunk(std::vector<std::vector<std::array<uint8_t, 3>>> &pixels
 {
     for (int i = start_col; i < end_col; i++) {
         for (int j = static_cast<int>(height) - 1; j >= 0; j--) {
-            double u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);
-            double v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);
-            Ray ray = _camera.ray(u, v);
-            Math::Vector3d color = traceRay(ray, 0);
+            double base_u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);      
+            double base_v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);    
+
+            Math::Vector3d color(0, 0, 0);
+
+            if (_aaMethod) {
+                color = _aaMethod->computePixel(
+                    base_u, base_v, width, height, _camera,
+                    [this](const Ray &r, int d) { return traceRay(r, d); }
+                );
+            } else {
+                color = traceRay(_camera.ray(base_u, base_v), 0);
+            }
+
             pixels[j][i] = {
                 static_cast<uint8_t>(std::clamp(color.x, 0.0, 255.0)),
                 static_cast<uint8_t>(std::clamp(color.y, 0.0, 255.0)),
