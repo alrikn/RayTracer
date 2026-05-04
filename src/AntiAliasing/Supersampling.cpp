@@ -23,8 +23,8 @@ Math::Vector3d Supersampling::computePixel(
         for (int sx = 0; sx < sqrtN; sx++) {
             double jx = (sx + dist(rng)) / sqrtN;
             double jy = (sy + dist(rng)) / sqrtN;
-            double su = base_u + jx / (width - 1);
-            double sv = base_v + jy / (height - 1);
+            double su = base_u + (jx - 0.5) / (width - 1);
+            double sv = base_v + (jy - 0.5) / (height - 1);
             accumulated = accumulated + traceRay(camera.ray(su, sv), 0);        
         }
     }
