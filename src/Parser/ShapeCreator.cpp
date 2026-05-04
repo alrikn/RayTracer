@@ -10,6 +10,7 @@
 #include "Parser.hpp"
 #include "Plane.hpp"
 #include "Sphere.hpp"
+#include "Cone.hpp"
 #include <memory>
 
 /*now for the creation functions */
@@ -93,4 +94,24 @@ std::shared_ptr<RayTracer::IShape> Parser::createCylinder(const libconfig::Setti
         cylinder->setReflectivity(reflectivity);
     }
     return cylinder;
+}
+
+std::shared_ptr<RayTracer::IShape> Parser::createCone(const libconfig::Setting& shapeConfig)
+{
+    auto apex = parsePoint3d(shapeConfig.lookup("apex"));
+    auto axis = parseVector3d(shapeConfig.lookup("axis"));
+    double angle = parseDouble(shapeConfig.lookup("angle"));
+    double height = parseDouble(shapeConfig.lookup("height"));
+
+    auto cone = std::make_shared<RayTracer::Cone>(apex, axis, angle, height);
+
+    if (shapeConfig.exists("color")) {
+        auto color = parseColor(shapeConfig.lookup("color"));
+        cone->setColor(color);
+    }
+    if (shapeConfig.exists("reflectivity")) {
+        double reflectivity = parseDouble(shapeConfig.lookup("reflectivity"));
+        cone->setReflectivity(reflectivity);
+    }
+    return cone;
 }

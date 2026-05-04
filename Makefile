@@ -20,6 +20,7 @@ SRC = main.cpp	\
 	src/RayTracer/shapes/Sphere.cpp	\
 	src/RayTracer/shapes/Plane.cpp	\
 	src/RayTracer/shapes/Cylinder.cpp	\
+	src/RayTracer/shapes/Cone.cpp	\
 	src/RayTracer/Camera.cpp	\
 	src/RayTracer/scene/Raytracing.cpp \
 	src/RayTracer/scene/ThreadManagement.cpp	\
