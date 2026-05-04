@@ -82,6 +82,10 @@ void Parser::parseScene()
     width = parseDouble(sceneConfig.lookup("width"));
     height = parseDouble(sceneConfig.lookup("height"));
 
+    if (width <= 0 || height <= 0 || brightness < 0 || max_depth < 0) {
+        throw std::runtime_error("Scene width, height, brightness, and max_depth must be positive values.");
+    }
+
     scene = std::make_unique<RayTracer::Scene>(brightness, max_depth);
 
     scene->setwidth(width);
