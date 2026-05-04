@@ -9,10 +9,12 @@
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 #include "ILight.hpp"
+#include "Point3d.hpp"
 #include "Scene.hpp"
 #include "SpecularLight.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include <cmath>
 #include <memory>
 
 Parser::Parser()
@@ -60,7 +62,7 @@ void Parser::run_parser(const std::string &filename)
     //config.readFile(filename.c_str()); //crashing immediately
 
     parseScene();
-    //parseCamera();
+    parseCamera();
     parseShapes();
     parseLights();
 }
@@ -82,37 +84,65 @@ void Parser::parseScene()
 
     scene = std::make_unique<RayTracer::Scene>(brightness, max_depth);
 
-    RayTracer::Camera camera( //for now hardcoded. TODO: fix this in issue #10
-        Math::Point3d(0, 1, 1), // move camera up and slightly back
-    RayTracer::Rectangle(
-        Math::Point3d(-3, -1.5, -1), // shift screen downward
-        Math::Vector3d(6, 0, 0),
-        Math::Vector3d(0, 3, 0)
-        )
-    );
     scene->setwidth(width);
     scene->setheight(height);
-    scene->setCamera(camera);
 }
 
-//void Parser::parseCamera()
-//{
-//    //for now hardcoded, in the future it won't be
-//    width = 4000; //this will be used to design better camera, so that the width and height of rectangle is based on this
-//    height = 2000;
-//
-//    RayTracer::Camera camera(
-//        Math::Point3d(0, 1, 1), // move camera up and slightly back
-//    RayTracer::Rectangle(
-//        Math::Point3d(-3, -1.5, -1), // shift screen downward
-//        Math::Vector3d(6, 0, 0),
-//        Math::Vector3d(0, 3, 0)
-//        )
-//    );
-//    scene->setwidth(width);
-//    scene->setheight(height);
-//    scene->setCamera(camera);
-//}
+void Parser::parseCamera()
+{
+    unsigned int scene_width = scene->getWidth();
+    unsigned int scene_height = scene->getHeight();
+    const libconfig::Setting& cameraConfig = config.lookup("camera");
+
+    Math::Point3d origin = parsePoint3d(cameraConfig.lookup("origin"));
+    Math::Vector3d direction = parseVector3d(cameraConfig.lookup("direction"));
+    double zoom = parseDouble(cameraConfig.lookup("zoom"));
+    // --- 1. Normalize forward direction ---
+    Math::Vector3d forward = direction.normalize();
+
+    // --- 2. Build orthonormal basis (right, up) ---
+    Math::Vector3d worldUp(0, 1, 0);
+
+    // Handle edge case: camera looking almost straight up/down
+    if (fabs(forward.dot(worldUp)) > 0.999)
+        worldUp = Math::Vector3d(0, 0, 1);
+
+    Math::Vector3d right = forward.cross(worldUp).normalize();
+    Math::Vector3d up = right.cross(forward).normalize();
+
+    // --- 3. Aspect ratio ---
+    double aspect = static_cast<double>(scene_width) /
+                    static_cast<double>(scene_height);
+
+    // --- 4. Screen size from zoom ---
+    // (zoom = "how close the screen is", bigger zoom = smaller screen)
+    double screenHeight = 1.0 / zoom;
+    double screenWidth = screenHeight * aspect;
+
+    // --- 5. Distance from camera to screen ---
+    double focalDistance = 1.0;
+
+    Math::Point3d center = origin + forward * focalDistance;
+
+    // --- 6. Rectangle axes ---
+    Math::Vector3d horizontal = right * screenWidth;
+    Math::Vector3d vertical   = up * screenHeight;
+
+    // --- 7. Bottom-left corner of the screen ---
+    Math::Point3d bottomLeft =
+        center - (horizontal / 2.0) - (vertical / 2.0);
+
+    // --- 8. Build camera ---
+    RayTracer::Rectangle screen(
+        bottomLeft,
+        horizontal,
+        vertical
+    );
+
+    RayTracer::Camera camera(origin, screen);
+    scene->setCamera(camera);
+
+}
 
 void Parser::parseShapes()
 {
