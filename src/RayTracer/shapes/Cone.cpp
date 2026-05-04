@@ -5,3 +5,4 @@
 ** Cone.cpp
 */
 
+#include "Cone.hpp"
