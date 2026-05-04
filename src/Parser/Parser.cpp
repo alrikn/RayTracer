@@ -212,13 +212,10 @@ void Parser::parseAntiAliasing()
 
     auto it = aaFactories.find(technique);
     if (it == aaFactories.end()) {
-        std::cerr << "[Antialiasing] Unknown technique: " << technique << ". Available: ";
-        for (auto jt = aaFactories.begin(); jt != aaFactories.end(); ++jt) {
-            if (jt != aaFactories.begin()) std::cerr << ", ";
-            std::cerr << jt->first;
-        }
-        std::cerr << "\n";
-        return;
+        std::string available = "[Antialiasing] Unknown technique: " + technique + "\nAvailable techniques:\n";
+        for (auto jt = aaFactories.begin(); jt != aaFactories.end(); ++jt)
+            available += "  - " + jt->first + "\n";
+        throw std::runtime_error(available);
     }
 
     scene->setAA(it->second(aaCfg));
