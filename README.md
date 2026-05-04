@@ -35,6 +35,8 @@ The renderer reads `scene_config.cfg` and writes a PPM image to stdout. For now,
 ./raytracer > output.ppm ; rm output.png; ffmpeg -i output.ppm output.png -loglevel quiet
 ```
 
+If `output.png` does not exist yet, `rm` will print an error; use `rm -f output.png` if you want to suppress it.
+
 ## Performance
 
 Here is a flame graph.
