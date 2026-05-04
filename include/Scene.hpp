@@ -11,13 +11,17 @@
 #include "ILight.hpp"
 #include "IShape.hpp"
 #include "Camera.hpp"
+#include "AntiAliasing/IAntiAliasing.hpp"
+
 
 #include <vector>
+#include <array>
 #include <memory>
 #include <string>
 #include <iosfwd>
 #include <atomic>
 #include <mutex>
+#include <cstdint>
 
 namespace RayTracer {
 
@@ -34,16 +38,17 @@ class Scene
         double brightness = 1.0; //global brightness. max is one, min is 0. it just touches final color values, doesn't touch lights.
 
         const int max_depth = 4; //max recursion
+        std::unique_ptr<IAntiAliasing> _aaMethod;
         const double epsilon = 1e-4; //small value to prevent selfintersection
 
         /*helper funcs*/
         Math::Vector3d average_light(std::vector<Math::Vector3d> light_contributions) const;
         double clamp_color(double x) const;
-        void write_color(const Math::Vector3d &color, std::string &output) const;
-        void renderChunk(std::vector<std::vector<Math::Vector3d>> &pixels, std::atomic<int> &columns_rendered, std::mutex &cerr_mutex, int start_col, int end_col) const;
-        std::string serializeBuffer(const std::vector<std::vector<Math::Vector3d>> &pixels) const;
+        void write_color(const std::array<uint8_t, 3> &color, std::string &output) const;
+        void renderChunk(std::vector<std::vector<std::array<uint8_t, 3>>> &pixels, std::atomic<int> &columns_rendered, std::mutex &cerr_mutex, int start_col, int end_col) const;
+        std::string serializeBuffer(const std::vector<std::vector<std::array<uint8_t, 3>>> &pixels) const;
     public:
-        Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth) {}
+        Scene(double brightness = 0.9, int max_depth = 4) : brightness(brightness), max_depth(max_depth), _aaMethod(nullptr) {}
         ~Scene() = default;
 
         void addShape(const std::shared_ptr<IShape> &object);
@@ -54,6 +59,10 @@ class Scene
         void setCamera(const Camera &camera) { _camera = camera; }
         void setwidth(unsigned int w) { width = w; }
         void setheight(unsigned int h) { height = h; }
+        void setAA(std::unique_ptr<IAntiAliasing> method) { _aaMethod = std::move(method); }
+
+        unsigned int getWidth() const { return width; }
+        unsigned int getHeight() const { return height; }
 };
 }
 

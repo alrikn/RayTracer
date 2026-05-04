@@ -3,19 +3,19 @@
 
 - [x] make an Ishape interface, and make Sphere implement it
 - [ ] make the hits in rectangle
-- [ ] make normalize vector3d make a new vector instead of modyfying itself
+- [x] make normalize vector3d make a new vector instead of modyfying itself
 - [x] make a enum color to vector
-- [ ] the Scene is a scene, so we should rename that class
-- [ ] no way ambient is that simple, there has to be more to it
+- [x] the Scene is a scene, so we should rename that class
+- [x] no way ambient is that simple, there has to be more to it
 - [x] make planes (not the flying kind, the surface kind)
-- [ ] make a save system (also design patterns for this)
+- [x] make a save system (also design patterns for this)
 - [ ] shared object handler with dlloader (can )
 - [ ] implement all of the shapes
-- [ ] specular lighting
+- [x] specular lighting
 - [ ] understand drop shadow
-- [ ] Phong reflection (thats just adding directional specular and ambient)
+- [x] Phong reflection (thats just adding directional specular and ambient)
 - [ ] reflaction
-- [ ] make option for planes to be chessboards
+- [x] make option for planes to be chessboards
 - [ ] look into what antialising
 - [ ] look into supersampling
 - [ ] look into multithreading
