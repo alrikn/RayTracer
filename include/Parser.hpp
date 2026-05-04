@@ -69,6 +69,7 @@ class Parser
         std::map<std::string, ShapeFactoryFunc> shapeFactories;
         std::map<std::string, LightFactoryFunc> lightFactories;
         void parseScene();
+        void parseCamera();
         void parseShapes();
         void parseLights();
 

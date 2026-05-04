@@ -9,10 +9,12 @@
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 #include "ILight.hpp"
+#include "Point3d.hpp"
 #include "Scene.hpp"
 #include "SpecularLight.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include <cmath>
 #include <memory>
 
 Parser::Parser()
@@ -60,7 +62,7 @@ void Parser::run_parser(const std::string &filename)
     //config.readFile(filename.c_str()); //crashing immediately
 
     parseScene();
-    //parseCamera();
+    parseCamera();
     parseShapes();
     parseLights();
 }
@@ -80,39 +82,77 @@ void Parser::parseScene()
     width = parseDouble(sceneConfig.lookup("width"));
     height = parseDouble(sceneConfig.lookup("height"));
 
+    if (width <= 0 || height <= 0 || brightness < 0 || max_depth < 0) {
+        throw std::runtime_error("Scene width, height, brightness, and max_depth must be positive values.");
+    }
+
     scene = std::make_unique<RayTracer::Scene>(brightness, max_depth);
 
-    RayTracer::Camera camera( //for now hardcoded. TODO: fix this in issue #10
-        Math::Point3d(0, 1, 1), // move camera up and slightly back
-    RayTracer::Rectangle(
-        Math::Point3d(-3, -1.5, -1), // shift screen downward
-        Math::Vector3d(6, 0, 0),
-        Math::Vector3d(0, 3, 0)
-        )
-    );
     scene->setwidth(width);
     scene->setheight(height);
-    scene->setCamera(camera);
 }
 
-//void Parser::parseCamera()
-//{
-//    //for now hardcoded, in the future it won't be
-//    width = 4000; //this will be used to design better camera, so that the width and height of rectangle is based on this
-//    height = 2000;
-//
-//    RayTracer::Camera camera(
-//        Math::Point3d(0, 1, 1), // move camera up and slightly back
-//    RayTracer::Rectangle(
-//        Math::Point3d(-3, -1.5, -1), // shift screen downward
-//        Math::Vector3d(6, 0, 0),
-//        Math::Vector3d(0, 3, 0)
-//        )
-//    );
-//    scene->setwidth(width);
-//    scene->setheight(height);
-//    scene->setCamera(camera);
-//}
+void Parser::parseCamera()
+{
+    unsigned int scene_width = scene->getWidth();
+    unsigned int scene_height = scene->getHeight();
+    const libconfig::Setting& cameraConfig = config.lookup("camera");
+
+    Math::Point3d origin = parsePoint3d(cameraConfig.lookup("origin"));
+    Math::Vector3d direction = parseVector3d(cameraConfig.lookup("direction"));
+    double zoom = parseDouble(cameraConfig.lookup("zoom"));
+    //
+    Math::Vector3d forward = direction.normalize();
+
+    //we build the orthonormal basis for the camera, 
+    // which is used to calculate the screen rectangle. 
+    // we need to find two vectors that are perpendicular to the forward vector and to each other. 
+    // we can use the cross product to find these vectors. 
+    // we also need to handle the case where the forward vector is parallel to the world up vector,
+    //  in which case we can use a different world up vector 
+    // to avoid getting a zero vector from the cross product.
+    Math::Vector3d worldUp(0, 1, 0);
+
+    // Handle edge case: camera looking almost straight up/down
+    if (fabs(forward.dot(worldUp)) > 0.999)
+        worldUp = Math::Vector3d(0, 0, 1);
+
+    Math::Vector3d right = forward.cross(worldUp).normalize();
+    Math::Vector3d up = right.cross(forward).normalize();
+
+    //the aspect ratio of screen is based on scene width height, so that its not distorted
+    double aspect = static_cast<double>(scene_width) /
+                    static_cast<double>(scene_height);
+
+    //da zoom
+    // (zoom = "how close the screen is", bigger zoom = smaller screen)
+    double screenHeight = 1.0 / zoom;
+    double screenWidth = screenHeight * aspect;
+
+    //distance from camera to screen
+    double focalDistance = 1.0;
+
+    Math::Point3d center = origin + (forward * focalDistance);
+
+    //rectangle axes
+    Math::Vector3d horizontal = right * screenWidth;
+    Math::Vector3d vertical   = up * screenHeight;
+
+    //bottom left corner of the screen rectangle.
+    // we calculate this by starting at the center of the screen and then moving left by half the horizontal vector and down by half the vertical vector.
+    Math::Point3d bottomLeft =
+        center - (horizontal / 2.0) - (vertical / 2.0);
+
+    RayTracer::Rectangle screen(
+        bottomLeft,
+        horizontal,
+        vertical
+    );
+
+    RayTracer::Camera camera(origin, screen);
+    scene->setCamera(camera);
+
+}
 
 void Parser::parseShapes()
 {

@@ -56,6 +56,9 @@ class Scene
         void setCamera(const Camera &camera) { _camera = camera; }
         void setwidth(unsigned int w) { width = w; }
         void setheight(unsigned int h) { height = h; }
+
+        unsigned int getWidth() const { return width; }
+        unsigned int getHeight() const { return height; }
 };
 }
 
