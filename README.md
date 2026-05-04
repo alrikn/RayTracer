@@ -46,4 +46,4 @@ Here is a flame graph.
 
 ![Flame Graph](docs/flame.svg)
 
-It can currently run 8000*4000 at 4 max depth in about 8 seconds on my laptop (my machine is a potato, so this is quite impressive). Multithreading is implemented, so if it can go quite fast on a good machine.
+It can currently run 8000*4000 at 4 max depth in about 8 seconds on my laptop (my machine is a potato, so this is quite impressive). Multithreading is implemented, so it can go quite fast on a good machine.
