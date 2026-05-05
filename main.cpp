@@ -9,11 +9,19 @@
 #include "Parser.hpp"
 #include "Scene.hpp"
 
+void help_message()
+{
+    std::cout << "USAGE: ./raytracer <SCENE_FILE>" << std::endl;
+    std::cout << "SCENE_FILE: path to the scene configuration file (a .cfg file)" << std::endl;
+}
 
-
-int main()
+int main(int argc, char **argv)
 {
 
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <scene_config_file>" << std::endl;
+        return 84;
+    }
     Parser parser;
 
     try {
