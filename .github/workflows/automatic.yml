@@ -14,7 +14,6 @@ jobs:
   build_and_test:
     if: github.repository == 'alrikn/RayTracer'
     runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker
 
     steps:
       - name: Checkout code
@@ -22,7 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get update
           apt-get install -y libconfig++-dev
 
       - name: Compile project
