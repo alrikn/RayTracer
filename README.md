@@ -30,11 +30,13 @@ make
 
 ## Usage
 
-The renderer reads `scene_config.cfg` and writes a PPM image to stdout. For now, use:
+Here, the renderer reads `scene_config.cfg` and outputs a ppm file. Should you not put an output flag, it will write to stdout. For now, use:
 
 ```sh
-./raytracer > output.ppm ; rm -f output.png; ffmpeg -i output.ppm output.png -loglevel quiet
+./raytracer scene_config.cfg -o output.ppm ; rm -f output.png; ffmpeg -i output.ppm output.png -loglevel quiet
 ```
+
+ffmpeg is used to convert the ppm file to png, which is more widely supported. You can also just open the ppm file with an image viewer that supports it.
 
 ## How it works
 

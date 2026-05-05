@@ -50,8 +50,8 @@ void Scene::renderChunk(std::vector<std::vector<std::array<uint8_t, 3>>> &pixels
 {
     for (int i = start_col; i < end_col; i++) {
         for (int j = static_cast<int>(height) - 1; j >= 0; j--) {
-            double base_u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);      
-            double base_v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);    
+            double base_u = (width == 1) ? 0.0 : static_cast<double>(i) / (width - 1);
+            double base_v = (height == 1) ? 0.0 : static_cast<double>(j) / (height - 1);
 
             Math::Vector3d color(0, 0, 0);
 
