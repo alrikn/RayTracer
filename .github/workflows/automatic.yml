@@ -36,12 +36,31 @@ jobs:
           echo "Executable found."
 
       - name: Run tests
-        run: ./raytracer > output.ppm
+        run: ./raytracer scene_config.cfg -o output.ppm
         timeout-minutes: 2 #if it can't be done in 2 minutes, it's bad and something has gone wrong
 
       - name: Clean
         if: always()
         run: make fclean
+
+      - name: display png image
+        if: always()
+        run: |
+          if [ -f "output.ppm" ]; then
+            sudo apt-get install -y ffmpeg
+            ffmpeg -i output.ppm output.png -loglevel quiet
+            echo "Image generated successfully."
+          else
+            echo "Output file not found!"
+            exit 1
+          fi
+
+      - name: Add image to job summary
+        run: |
+          if [ -f "output.png" ]; then
+            echo "## Rendered Image" >> $GITHUB_STEP_SUMMARY
+            echo "![render](output.png)" >> $GITHUB_STEP_SUMMARY
+          fi
 
   push_to_mirror:
     needs: build_and_test
