@@ -14,6 +14,7 @@ Currently supports:
   - Spheres
   - Planes
   - Cylinders
+  - Cones
 - Lights
   - Specular
   - Directional
