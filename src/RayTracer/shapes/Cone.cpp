@@ -114,6 +114,6 @@ std::optional<RayTracer::HitRecord>RayTracer::Cone::hits(const RayTracer::Ray& r
     if (t_base >= 0) {
         hit = check_base_hit(ray, hit, t_base);
     }
-    
+
     return hit;
 }

@@ -23,7 +23,7 @@ class Cone : public Ashape
         double height = 0;
 
         Cone();
-        Cone(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center, CYLINDER), axis(axis), radius(radius), height(height) {};
+        Cone(const Math::Point3d &center, const Math::Vector3d &axis, double radius, double height) : Ashape(center, CONE), axis(axis.normalize()), radius(radius), height(height) {};
         ~Cone() = default;
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
         std::optional<HitRecord> check_cone_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const;
