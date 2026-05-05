@@ -33,54 +33,87 @@ the infinite cone to get:
 (((O + D * k) - C) - (((O + D * k) - C) . A) * A)^2 - (r/h)^2 * (((O + D * k) - C) . A)^2 = 0
 */
 
-std::optional<RayTracer::HitRecord>RayTracer::Cone::check_cone_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const
+std::optional<RayTracer::HitRecord> RayTracer::Cone::check_cone_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const
 {
     std::optional<HitRecord> hit = std::nullopt;
-
     double sqrtD = std::sqrt(discriminant);
     double k1 = (-b - sqrtD) / (2 * a);
     double k2 = (-b + sqrtD) / (2 * a);
-    double k = std::numeric_limits<double>::infinity();
-    if (k1 > 0 && k1 < k)
-        k = k1;
-    if (k2 > 0 && k2 < k)
-        k = k2;
-    if (k == std::numeric_limits<double>::infinity())
-        return hit; // no valid intersection
-    if (k >= 0) {
-        Math::Point3d intersection = ray.origin + (ray.direction * k);
+
+    if (k1 > 0) {
+        Math::Point3d intersection = ray.origin + (ray.direction * k1);
         double height_at_intersection = (intersection - origin).dot(axis);
         if (height_at_intersection >= 0 && height_at_intersection <= height) {
             HitRecord record;
+            Math::Vector3d radial = (intersection - (origin + axis * height_at_intersection)).normalize();
             record.point = intersection;
-            record.normal = (intersection - (origin + axis * height_at_intersection)).normalize();
+            record.normal = (radial * height - axis * radius).normalize();
             record.color = COLOR_MAP.at(getColor());
             record.incomingDirection = ray.direction;
-            record.distance = k;
+            record.distance = k1;
+            hit = record;
+        }
+    }
+    if (k2 > 0 && (!hit || k2 < hit->distance)) {
+        Math::Point3d intersection = ray.origin + (ray.direction * k2);
+        double height_at_intersection = (intersection - origin).dot(axis);
+        if (height_at_intersection >= 0 && height_at_intersection <= height) {
+            HitRecord record;
+            Math::Vector3d radial = (intersection - (origin + axis * height_at_intersection)).normalize();
+            record.point = intersection;
+            record.normal = (radial * height - axis * radius).normalize();
+            record.color = COLOR_MAP.at(getColor());
+            record.incomingDirection = ray.direction;
+            record.distance = k2;
             hit = record;
         }
     }
     return hit;
 }
 
+std::optional<RayTracer::HitRecord>RayTracer::Cone::check_base_hit(const RayTracer::Ray& ray, std::optional<HitRecord> hit, double t_base) const
+{
+    Math::Point3d intersection = ray.origin + (ray.direction * t_base);
+    Math::Point3d base_center = origin + axis * height;
+    Math::Vector3d to_hit = intersection - base_center;
+    double dist_from_center = to_hit.dot(to_hit) - std::pow(to_hit.dot(axis), 2);
+    if (dist_from_center <= radius * radius) {
+        HitRecord record;
+        record.point = intersection;
+        record.normal = axis;
+        record.color = COLOR_MAP.at(getColor());
+        record.incomingDirection = ray.direction;
+        record.distance = t_base;
+        if (!hit || t_base < hit->distance) {
+            hit = record;
+        }
+    }
+    return hit;
+}
+
+
+//it doesnt work. this is because the equation of the cone is not correct. we need to take into account the height of the cone and the radius of the base of the cone. we also need to take into account the direction of the cone, which is defined by the axis. we can do this by projecting the point of intersection onto the axis and subtracting this projection from the point of intersection. this will give us a vector that is perpendicular to the axis and points from the center of the cone to the point of intersection. we can then use this vector to find the distance from the point of intersection to the axis, which should be equal to the radius of the cone at that height for a valid intersection.
+//the correct function is:
 std::optional<RayTracer::HitRecord>RayTracer::Cone::hits(const RayTracer::Ray& ray) const
 {
     std::optional<HitRecord> hit = std::nullopt;
     Math::Vector3d oc = ray.origin - origin;
-    double cos_theta = radius / std::sqrt(radius * radius + height * height);
+    double cos_theta = height / std::sqrt(radius * radius + height * height);
     double cos_theta_squared = cos_theta * cos_theta;
     double oc_dot_axis = oc.dot(axis);
     double d_dot_axis = ray.direction.dot(axis);
-    double a = ray.direction.dot(ray.direction) - (cos_theta_squared * d_dot_axis * d_dot_axis);
-    double b = 2 * (ray.direction.dot(oc) - (cos_theta_squared * d_dot_axis * oc_dot_axis));
-    double c = oc.dot(oc) - (cos_theta_squared * oc_dot_axis * oc_dot_axis);
+    double a = d_dot_axis * d_dot_axis - cos_theta_squared * ray.direction.dot(ray.direction);
+    double b = 2.0 * (oc_dot_axis * d_dot_axis - cos_theta_squared * ray.direction.dot(oc));
+    double c = oc_dot_axis * oc_dot_axis - cos_theta_squared * oc.dot(oc);
     double discriminant = (b * b) - (4 * a * c);
     if (discriminant >= 0) {
         hit = check_cone_hit(discriminant, a, b, ray);
     }
-    double t_base = (origin - ray.origin).dot(axis) / ray.direction.dot(axis);
+
+    double t_base = (origin + axis * height - ray.origin).dot(axis) / ray.direction.dot(axis);
     if (t_base >= 0) {
         hit = check_base_hit(ray, hit, t_base);
     }
+    
     return hit;
 }
