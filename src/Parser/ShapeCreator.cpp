@@ -98,12 +98,12 @@ std::shared_ptr<RayTracer::IShape> Parser::createCylinder(const libconfig::Setti
 
 std::shared_ptr<RayTracer::IShape> Parser::createCone(const libconfig::Setting& shapeConfig)
 {
-    auto apex = parsePoint3d(shapeConfig.lookup("apex"));
+    auto center = parsePoint3d(shapeConfig.lookup("origin"));
     auto axis = parseVector3d(shapeConfig.lookup("axis"));
-    double angle = parseDouble(shapeConfig.lookup("angle"));
+    double radius = parseDouble(shapeConfig.lookup("radius"));
     double height = parseDouble(shapeConfig.lookup("height"));
 
-    auto cone = std::make_shared<RayTracer::Cone>(apex, axis, angle, height);
+    auto cone = std::make_shared<RayTracer::Cone>(center, axis, radius, height);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
