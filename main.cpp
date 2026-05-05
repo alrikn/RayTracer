@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <ostream>
 #include <string>
+#include <memory>
 
 #include "Parser.hpp"
 #include "Scene.hpp"
@@ -35,6 +37,25 @@ std::string check_output_file(int argc, char **argv)
     return "";
 }
 
+std::ostream& parse_input(int argc, char **argv, std::ofstream &file)
+{
+    if (argc < 2) {
+        exit(help_message());
+    }
+
+    std::string outputFile = check_output_file(argc, argv);
+    if (!outputFile.empty()) {
+        file.open(outputFile);
+        if (!file) {
+            std::cerr << "Error opening output file: " << outputFile << std::endl;
+            exit(help_message());
+        }
+        return file;
+    }
+
+    return std::cout;
+}
+
 int main(int argc, char **argv)
 {
 
@@ -56,14 +77,7 @@ int main(int argc, char **argv)
     }
 
     RayTracer::Scene& scene = parser.getScene();
-    std::string outputFile = check_output_file(argc, argv);
-    if (!outputFile.empty()) {
-        std::ofstream out(outputFile);
-        if (!out) {
-            std::cerr << "Error opening output file: " << outputFile << std::endl;
-            return help_message();
-        }
-        scene.render(out);
-    } else
-        scene.render(std::cout);
+    std::ofstream outputFile;
+    std::ostream& output = parse_input(argc, argv, outputFile);
+    scene.render(output);
 }
