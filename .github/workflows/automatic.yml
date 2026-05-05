@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get install -y libconfig++-dev
+          sudo apt-get install -y libconfig++-dev
 
       - name: Compile project
         run: make
