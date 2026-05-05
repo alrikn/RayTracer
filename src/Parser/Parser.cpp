@@ -34,6 +34,9 @@ Parser::Parser()
     shapeFactories["cylinder"] = [this](const libconfig::Setting& shapeConfig) {
         return createCylinder(shapeConfig);
     };
+    shapeFactories["cone"] = [this](const libconfig::Setting& shapeConfig) {
+        return createCone(shapeConfig);
+    };
 
     aaFactories["supersampling"] = [this](const libconfig::Setting &cfg) {
         return createSupersampling(cfg);
