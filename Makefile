@@ -32,7 +32,7 @@ SRC = main.cpp	\
 	src/Parser/ShapeCreator.cpp \
 	src/Parser/AACreator.cpp \
 	src/Parser/helper.cpp \
-	src/AntiAliasing/Supersampling.cpp
+	src/RayTracer/AntiAliasing/Supersampling.cpp
 
 
 
