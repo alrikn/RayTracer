@@ -55,12 +55,11 @@ jobs:
             exit 1
           fi
 
-      - name: Add image to job summary
-        run: |
-          if [ -f "output.png" ]; then
-            echo "## Rendered Image" >> $GITHUB_STEP_SUMMARY
-            echo "![render](output.png)" >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-image
+          path: output.png
 
   push_to_mirror:
     needs: build_and_test
