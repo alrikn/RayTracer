@@ -77,4 +77,5 @@ TEST_CASE("AmbientLight: ignores blocker — result same with or without blockin
     CHECK_COLOR(r1.x, r2.x);
     CHECK_COLOR(r1.y, r2.y);
     CHECK_COLOR(r1.z, r2.z);
+    CHECK(1 == 2); // to test the github workflow fails correctly
 }
