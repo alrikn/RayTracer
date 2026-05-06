@@ -19,3 +19,9 @@ compile_commands.json
 *pl
 *.folded
 *.svg
+
+#Tests directory
+!tests/
+!tests/**/
+!tests/**
+!.github/workflows/run-tests.yml
