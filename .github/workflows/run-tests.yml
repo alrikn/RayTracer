@@ -1,7 +1,6 @@
 name: Tests and Coverage Ratchet
 
 on:
-  push:
   pull_request:
     branches:
       - main
