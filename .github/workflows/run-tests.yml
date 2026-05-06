@@ -1,24 +1,57 @@
-name: Tests
+name: Tests and Coverage Ratchet
 
 on:
   push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  tests:
-    name: Build and Run Tests
+  coverage-check:
+    name: Build, Test, and Verify Coverage
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang make libconfig++-dev
+          sudo apt-get install -y clang make libconfig++-dev llvm-18 lcov
 
-      - name: Build project
-        run: make
+      - name: Calculate Main Branch Coverage
+        run: |
+          git checkout origin/main
+          make coverage
+          MAIN_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
+          echo "MAIN_COV=$MAIN_COV" >> $GITHUB_ENV
+          make fclean
 
-      - name: Run tests
-        run: make test
+      - name: Calculate Current Branch Coverage
+        run: |
+          git checkout ${{ github.sha }}
+          make coverage
+          PR_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
+          echo "PR_COV=$PR_COV" >> $GITHUB_ENV
+
+      - name: Enforce Coverage Rules
+        run: |
+          echo "Target Main Coverage: ${MAIN_COV}%"
+          echo "Current Commit Coverage: ${PR_COV}%"
+          
+          IS_BELOW_80=$(awk -v pr="$PR_COV" 'BEGIN {print (pr < 80.0)}')
+          IS_BELOW_MAIN=$(awk -v pr="$PR_COV" -v main="$MAIN_COV" 'BEGIN {print (pr < main)}')
+          
+          if [ "$IS_BELOW_80" -eq 1 ]; then
+            echo "::warning title=Low Code Coverage::Code coverage is currently at ${PR_COV}%. It does not satisfy the required 80%."
+          fi
+          
+          if [ "$IS_BELOW_MAIN" -eq 1 ]; then
+            echo "::error title=Coverage Drop Detected::Code coverage dropped from ${MAIN_COV}% to ${PR_COV}%. Merging is blocked to protect the codebase."
+            exit 1
+          fi
+          
+          echo "Code coverage meets all requirements. Process finished successfully."
