@@ -1,0 +1,18 @@
+{
+    "testMate.cpp.test.advancedExecutables": [
+        {
+            "pattern": "tests/rt_unit_tests",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "pattern": "tests/rt_integration_tests",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "pattern": "tests/rt_functional_tests",
+            "cwd": "${workspaceFolder}"
+        }
+    ],
+    "testMate.cpp.build.task": "build my tests",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
+}
