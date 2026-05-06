@@ -136,11 +136,11 @@ flame_check: re
 
 clean:
 	rm -f $(OBJ) $(CONVERT_OBJ)
-	rm -f default.profraw default.profdata lcov.info
-	rm -rf coverage_report
 
 fclean: clean
 	rm -f $(NAME) $(CONVERT_NAME)
+	rm -f default.profraw default.profdata lcov.info
+	rm -rf coverage_report
 	rm -f tests/rt_unit_tests tests/rt_integration_tests tests/rt_functional_tests
 
 ## ── Code Coverage ───────────────────────────────────────────────────────────
