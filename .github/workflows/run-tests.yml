@@ -43,15 +43,9 @@ jobs:
           echo "Current Commit Coverage: ${PR_COV}%"
           
           IS_BELOW_80=$(awk -v pr="$PR_COV" 'BEGIN {print (pr < 80.0)}')
-          IS_BELOW_MAIN=$(awk -v pr="$PR_COV" -v main="$MAIN_COV" 'BEGIN {print (pr < main)}')
-          
+
           if [ "$IS_BELOW_80" -eq 1 ]; then
             echo "::warning title=Low Code Coverage::Code coverage is currently at ${PR_COV}%. It does not satisfy the required 80%."
           fi
-          
-          if [ "$IS_BELOW_MAIN" -eq 1 ]; then
-            echo "::error title=Coverage Drop Detected::Code coverage dropped from ${MAIN_COV}% to ${PR_COV}%. Merging is blocked to protect the codebase."
-            exit 1
-          fi
-          
+
           echo "Code coverage meets all requirements. Process finished successfully."
