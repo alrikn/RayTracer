@@ -31,6 +31,7 @@ jobs:
 
       - name: Calculate Current Branch Coverage
         run: |
+          git clean -fd
           git checkout ${{ github.sha }}
           make coverage
           PR_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
