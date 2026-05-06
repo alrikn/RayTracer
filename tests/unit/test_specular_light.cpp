@@ -106,3 +106,23 @@ TEST_CASE("SpecularLight: higher shininess gives a smaller highlight", "[specula
     // Higher shininess should produce a smaller (or equal) red component
     CHECK(r_high.x <= r_low.x + COLOR_EPS);
 }
+
+TEST_CASE("SpecularLight: zero shininess returns black immediately", "[specular_light]") {
+    // Covers line 30: if(_shininess <= 0.0) guard → return (0,0,0).
+    RayTracer::SpecularLight light{
+        Math::Vector3d{0, -1, 0}, 1.0, 0.0, 0.5, Math::Vector3d{255, 255, 255}
+    };
+    auto hit = make_hit(0, 0, 0,  0, 1, 0,  255, 0, 0,  0, -1, 0);
+    auto result = light.intensity(hit, {});
+    CHECK_COLOR_VEC3(result, 0.0, 0.0, 0.0);
+}
+
+TEST_CASE("SpecularLight: zero specular_strength returns black immediately", "[specular_light]") {
+    // Covers line 30: if(_specular_strength <= 0.0) guard → return (0,0,0).
+    RayTracer::SpecularLight light{
+        Math::Vector3d{0, -1, 0}, 1.0, 32.0, 0.0, Math::Vector3d{255, 255, 255}
+    };
+    auto hit = make_hit(0, 0, 0,  0, 1, 0,  255, 0, 0,  0, -1, 0);
+    auto result = light.intensity(hit, {});
+    CHECK_COLOR_VEC3(result, 0.0, 0.0, 0.0);
+}

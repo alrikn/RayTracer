@@ -57,3 +57,16 @@ TEST_CASE("Scene::traceRay: brightness 0.5 halves the output color", "[scene][am
     CHECK_COLOR(color.y, 0.0);
     CHECK_COLOR(color.z, 0.0);
 }
+
+TEST_CASE("Scene::traceRay: shape hit with no lights returns black (average_light empty)", "[scene][ambient]") {
+    // Covers Raytracing.cpp lines 39-40: average_light({}) → return (0,0,0).
+    // All other tests add at least one light; this one deliberately has none.
+    RayTracer::Scene scene{1.0, 4};
+    auto sphere = std::make_shared<RayTracer::Sphere>(Math::Point3d{0, 0, -2}, 1.0);
+    sphere->setColor(RED);
+    sphere->setReflectivity(0.0);
+    scene.addShape(sphere);
+
+    auto color = scene.traceRay(make_ray(0, 0, 0,  0, 0, -1), 0);
+    CHECK_COLOR_VEC3(color, 0.0, 0.0, 0.0);
+}

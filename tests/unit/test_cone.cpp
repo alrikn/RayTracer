@@ -64,3 +64,21 @@ TEST_CASE("Cone: HitRecord color matches cone color", "[cone]") {
     CHECK_COLOR(hit->color.y, 0.0);
     CHECK_COLOR(hit->color.z, 255.0);
 }
+
+TEST_CASE("Cone: lateral surface hit covers k1 block and k2 update", "[cone]") {
+    // Cone at (0,0,0) axis (0,1,0) r=1 h=1.
+    // Ray (0,0.5,5) dir (0,0,-1):
+    //   a=-0.5, b=5, c=-12.375, disc=0.25
+    //   k1=5.5 → height=0.5 ∈ [0,1] → HIT set (covers lines 47-54)
+    //   k2=4.5 < 5.5 → updates hit (covers k2 update path)
+    //   Final distance = 4.5 (closer lateral intersection).
+    RayTracer::Cone cone{
+        Math::Point3d{0, 0, 0},
+        Math::Vector3d{0, 1, 0},
+        1.0, 1.0
+    };
+    auto hit = cone.hits(make_ray(0, 0.5, 5,  0, 0, -1));
+
+    REQUIRE(hit.has_value());
+    CHECK_APPROX(hit->distance, 4.5);
+}

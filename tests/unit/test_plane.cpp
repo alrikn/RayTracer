@@ -100,3 +100,16 @@ TEST_CASE("Plane: chessboard tiles at different positions have different colors"
                        std::abs(h1->color.z - h2->color.z) <= COLOR_EPS);
     CHECK(!same_color);
 }
+
+TEST_CASE("Plane: chessboard with X-aligned normal takes the abs(normal.x)>0.9 branch", "[plane]") {
+    // All existing chessboard tests use normal=(0,1,0) → abs(0)<0.9 → else branch.
+    // This test uses normal=(1,0,0) → abs(1.0)>0.9 → if branch (line 49).
+    RayTracer::Plane p{Math::Vector3d{1, 0, 0}, Math::Point3d{0, 0, 0}};
+    p.setChessboardPattern(true);
+    p.setColor(RED);
+
+    auto hit = p.hits(make_ray(-5, 0, 0,  1, 0, 0));
+
+    REQUIRE(hit.has_value());
+    CHECK_APPROX(hit->distance, 5.0);
+}

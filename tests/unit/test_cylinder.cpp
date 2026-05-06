@@ -112,3 +112,43 @@ TEST_CASE("Cylinder: HitRecord color matches cylinder color", "[cylinder]") {
     CHECK_COLOR(hit->color.y, 255.0);
     CHECK_COLOR(hit->color.z, 255.0);
 }
+
+// ── Branch coverage: cap selection logic ─────────────────────────────────────
+
+TEST_CASE("Cylinder: front cap skipped when t_front is negative", "[cylinder]") {
+    // Branch: hits() if(t_front > 0) FALSE.
+    // Ray (0,2,5) dir (0,0.1,-1): denom=0.1, t_front=(0-2)/0.1=-20 → skipped.
+    // Lateral hit at k=4, height=2.4 ∈ [0,3].
+    RayTracer::Cylinder cyl{
+        Math::Point3d{0, 0, 0}, Math::Vector3d{0, 1, 0}, 1.0, 3.0
+    };
+    auto hit = cyl.hits(make_ray(0, 2, 5,  0, 0.1, -1));
+
+    REQUIRE(hit.has_value());
+    CHECK_APPROX(hit->distance, 4.0);
+}
+
+TEST_CASE("Cylinder: front cap not selected when lateral hit is closer; back cap t negative", "[cylinder]") {
+    // Branch A: check_front_cap_hit inner if FALSE (lateral k=4 < t_front=5).
+    // Branch B: hits() if(t_back > 0) FALSE (t_back=-5 < 0).
+    // Ray (0,1.5,5) dir (0,-0.3,-1): lateral k=4, t_front=5>4 → no override, t_back=-5.
+    RayTracer::Cylinder cyl{
+        Math::Point3d{0, 0, 0}, Math::Vector3d{0, 1, 0}, 1.0, 3.0
+    };
+    auto hit = cyl.hits(make_ray(0, 1.5, 5,  0, -0.3, -1));
+
+    REQUIRE(hit.has_value());
+    CHECK_APPROX(hit->distance, 4.0);
+}
+
+TEST_CASE("Cylinder: back cap not selected when lateral hit is closer", "[cylinder]") {
+    // Branch: check_back_cap_hit inner if FALSE (lateral k=4 < t_back=5).
+    // Ray (0,1.5,-5) dir (0,0.3,1): t_front=-5 (skipped), lateral k=4, t_back=5>4 → no override.
+    RayTracer::Cylinder cyl{
+        Math::Point3d{0, 0, 0}, Math::Vector3d{0, 1, 0}, 1.0, 3.0
+    };
+    auto hit = cyl.hits(make_ray(0, 1.5, -5,  0, 0.3, 1));
+
+    REQUIRE(hit.has_value());
+    CHECK_APPROX(hit->distance, 4.0);
+}

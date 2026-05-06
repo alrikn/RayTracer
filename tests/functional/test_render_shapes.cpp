@@ -162,3 +162,27 @@ TEST_CASE("Golden render: cone base — center pixels are yellow", "[functional]
     CHECK(pixel_at(pixels, 0, 0)[0] == 0);
     CHECK(pixel_at(pixels, 9, 9)[0] == 0);
 }
+
+TEST_CASE("Functional: render with width=0 produces no output", "[functional][threadmgmt]") {
+    // Covers ThreadManagement.cpp line 19: if(width==0||height==0) return.
+    RayTracer::Scene scene{1.0, 4};
+    scene.setwidth(0);
+    scene.setheight(10);
+
+    std::ostringstream oss;
+    scene.render(oss);
+
+    CHECK(oss.str().empty());
+}
+
+TEST_CASE("Functional: render with height=0 produces no output", "[functional][threadmgmt]") {
+    // Covers ThreadManagement.cpp line 19 via the height==0 path.
+    RayTracer::Scene scene{1.0, 4};
+    scene.setwidth(10);
+    scene.setheight(0);
+
+    std::ostringstream oss;
+    scene.render(oss);
+
+    CHECK(oss.str().empty());
+}
