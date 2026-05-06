@@ -102,15 +102,23 @@ test_functional: $(LIB_OBJS)
 	$(TEST_CXX) $(TEST_FLAGS) $(FUNCTIONAL_SRCS) $(LIB_OBJS) -o /tmp/rt_functional_tests
 	/tmp/rt_functional_tests
 
-test: test_unit test_integration test_functional
-	@echo ""
-	@echo "══════════════════════════════════════════════════════════════════════════════"
-	@echo "  ALL TESTS PASSED"
-	@echo "══════════════════════════════════════════════════════════════════════════════"
-	@printf "  Unit        │ "; /tmp/rt_unit_tests        2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'
-	@printf "  Integration │ "; /tmp/rt_integration_tests  2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'
-	@printf "  Functional  │ "; /tmp/rt_functional_tests   2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'
-	@echo "══════════════════════════════════════════════════════════════════════════════"
+test: $(LIB_OBJS)
+	@result=0; \
+	$(TEST_CXX) $(TEST_FLAGS) $(UNIT_SRCS) $(LIB_OBJS) -o /tmp/rt_unit_tests && \
+	    /tmp/rt_unit_tests || result=1; \
+	$(TEST_CXX) $(TEST_FLAGS) $(INTEGRATION_SRCS) $(LIB_OBJS) -o /tmp/rt_integration_tests && \
+	    /tmp/rt_integration_tests || result=1; \
+	$(TEST_CXX) $(TEST_FLAGS) $(FUNCTIONAL_SRCS) $(LIB_OBJS) -o /tmp/rt_functional_tests && \
+	    /tmp/rt_functional_tests || result=1; \
+	echo ""; \
+	echo "══════════════════════════════════════════════════════════════════════════════"; \
+	if [ $$result -eq 0 ]; then echo "  ALL TESTS PASSED"; else echo "  SOME TESTS FAILED — see details above"; fi; \
+	echo "══════════════════════════════════════════════════════════════════════════════"; \
+	printf "  Unit        │ "; /tmp/rt_unit_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
+	printf "  Integration │ "; /tmp/rt_integration_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
+	printf "  Functional  │ "; /tmp/rt_functional_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
+	echo "══════════════════════════════════════════════════════════════════════════════"; \
+	exit $$result
 
 ## ────────────────────────────────────────────────────────────────────────────
 
