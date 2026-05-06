@@ -25,3 +25,16 @@ compile_commands.json
 !tests/**/
 !tests/**
 !.github/workflows/run-tests.yml
+
+
+# ── Coverage Data & Reports ──
+*.profraw
+*.profdata
+lcov.info
+*.html
+*.css
+
+# ── Test Binaries ──
+tests/rt_unit_tests
+tests/rt_integration_tests
+tests/rt_functional_tests
