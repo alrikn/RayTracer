@@ -188,3 +188,5 @@ coverage: fclean
 	@$(MAKE) clean --no-print-directory
 
 re: fclean all
+
+.PHONY: all clean fclean re test test_unit test_integration test_functional build_tests coverage flame_check
