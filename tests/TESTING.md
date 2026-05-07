@@ -8,22 +8,30 @@ Read this before writing any new test. It takes ~5 minutes.
 ## Quick start
 
 ```bash
-make test              # build + run all tests — prints final summary with coverage %
+make test              # build + run all tests — prints final summary per tier
 make test_unit         # fast isolated tests only (no I/O, no Scene)
 make test_integration  # Scene::traceRay() end-to-end tests
 make test_functional   # full renders, pixel-level checks
+make coverage          # build with instrumentation, run all tests, generate HTML report + lcov.info
 ```
 
 A passing `make test` ends with:
 ```
 ══════════════════════════════════════════════════════════════════════════════
+  TEST RESULTS
   ALL TESTS PASSED
 ══════════════════════════════════════════════════════════════════════════════
-  Unit        │ test cases:  74 |  74 passed | 0 failed | 0 skipped | 100%
-  Integration │ test cases:  11 |  11 passed | 0 failed | 0 skipped | 100%
-  Functional  │ test cases:   7 |   7 passed | 0 failed | 0 skipped | 100%
+  Unit        │ test cases:  74 |  74 passed | 0 failed | 0 skipped
+  Integration │ test cases:  11 |  11 passed | 0 failed | 0 skipped
+  Functional  │ test cases:   7 |   7 passed | 0 failed | 0 skipped
 ══════════════════════════════════════════════════════════════════════════════
 ```
+
+`make coverage` compiles all objects with `-fprofile-instr-generate -fcoverage-mapping`, runs the three test binaries to collect profiling data, merges it, and produces:
+- `coverage_report/index.html` — browsable line-by-line HTML report
+- `lcov.info` — machine-readable summary (used by the CI workflow)
+
+It prints the same per-tier TEST RESULTS summary at the end, then deletes the instrumented `.o` files so a subsequent `make` always rebuilds clean non-instrumented objects.
 
 If any tier fails, `make test` still runs the remaining tiers, shows the doctest failure output for the failing tier(s), and prints the final summary banner at the end.
 
