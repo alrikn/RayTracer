@@ -25,7 +25,7 @@ A passing `make test` ends with:
 ══════════════════════════════════════════════════════════════════════════════
 ```
 
-If any tier fails, make stops and shows the doctest failure output directly — no summary is printed.
+If any tier fails, `make test` still runs the remaining tiers, shows the doctest failure output for the failing tier(s), and prints the final summary banner at the end.
 
 ---
 
