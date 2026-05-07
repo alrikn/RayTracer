@@ -70,3 +70,4 @@ TEST_CASE("Scene::traceRay: shape hit with no lights returns black (average_ligh
     auto color = scene.traceRay(make_ray(0, 0, 0,  0, 0, -1), 0);
     CHECK_COLOR_VEC3(color, 0.0, 0.0, 0.0);
 }
+

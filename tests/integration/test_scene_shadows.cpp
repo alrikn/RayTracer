@@ -66,3 +66,4 @@ TEST_CASE("Scene::traceRay: shadow — plane with blocker casts darker region", 
 
     CHECK(lit.x > shad.x);
 }
+
