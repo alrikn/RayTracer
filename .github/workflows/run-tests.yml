@@ -35,6 +35,11 @@ jobs:
 
           if [ "$IS_BELOW_80" -eq 1 ]; then
             echo "::warning title=Low Code Coverage::Code coverage is currently at ${PR_COV}%. It does not satisfy the required 80%."
+            echo "## ⚠️ Low Code Coverage" >> $GITHUB_STEP_SUMMARY
+            echo "Coverage is currently at **${PR_COV}%**. The required minimum is **80%**." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ✅ Code Coverage" >> $GITHUB_STEP_SUMMARY
+            echo "Coverage is at **${PR_COV}%**." >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "Code coverage meets all requirements. Process finished successfully."
