@@ -1,0 +1,45 @@
+name: Tests and Coverage Ratchet
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  coverage-check:
+    name: Build, Test, and Verify Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang make libconfig++-dev llvm-18 lcov
+
+      - name: Calculate Coverage
+        run: |
+          make coverage
+          PR_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
+          echo "PR_COV=$PR_COV" >> $GITHUB_ENV
+
+      - name: Enforce Coverage Rules
+        run: |
+          echo "Current Commit Coverage: ${PR_COV}%"
+
+          IS_BELOW_80=$(awk -v pr="$PR_COV" 'BEGIN {print (pr < 80.0)}')
+
+          if [ "$IS_BELOW_80" -eq 1 ]; then
+            echo "::warning title=Low Code Coverage::Code coverage is currently at ${PR_COV}%. It does not satisfy the required 80%."
+            echo "## ⚠️ Low Code Coverage" >> $GITHUB_STEP_SUMMARY
+            echo "Coverage is currently at **${PR_COV}%**. The required minimum is **80%**." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ✅ Code Coverage" >> $GITHUB_STEP_SUMMARY
+            echo "Coverage is at **${PR_COV}%**." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "Code coverage meets all requirements. Process finished successfully."
