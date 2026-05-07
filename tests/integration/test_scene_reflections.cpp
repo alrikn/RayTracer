@@ -139,4 +139,3 @@ TEST_CASE("Scene::traceRay: recursive reflections terminate without crash", "[sc
     CHECK(color.x >= 0.0);
     CHECK(color.x <= 255.0);
 }
-
