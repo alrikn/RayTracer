@@ -185,5 +185,6 @@ coverage: fclean
 	@printf "  Integration │ "; tests/rt_integration_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'
 	@printf "  Functional  │ "; tests/rt_functional_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'
 	@echo "══════════════════════════════════════════════════════════════════════════════"
+	@$(MAKE) clean --no-print-directory
 
 re: fclean all

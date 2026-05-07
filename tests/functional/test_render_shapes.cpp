@@ -20,6 +20,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <algorithm>
 
 // Shared PPM helpers — duplicated across functional test files intentionally.
 // Each file is self-contained so it can be run and read independently.
