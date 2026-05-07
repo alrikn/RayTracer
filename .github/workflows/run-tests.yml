@@ -21,27 +21,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang make libconfig++-dev llvm-18 lcov
 
-      - name: Calculate Main Branch Coverage
+      - name: Calculate Coverage
         run: |
-          git checkout origin/main
-          make coverage
-          MAIN_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
-          echo "MAIN_COV=$MAIN_COV" >> $GITHUB_ENV
-          make fclean
-
-      - name: Calculate Current Branch Coverage
-        run: |
-          git clean -fd
-          git checkout ${{ github.sha }}
           make coverage
           PR_COV=$(lcov --summary lcov.info | grep "lines......:" | awk '{print $2}' | tr -d '%')
           echo "PR_COV=$PR_COV" >> $GITHUB_ENV
 
       - name: Enforce Coverage Rules
         run: |
-          echo "Target Main Coverage: ${MAIN_COV}%"
           echo "Current Commit Coverage: ${PR_COV}%"
-          
+
           IS_BELOW_80=$(awk -v pr="$PR_COV" 'BEGIN {print (pr < 80.0)}')
 
           if [ "$IS_BELOW_80" -eq 1 ]; then

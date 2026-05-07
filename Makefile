@@ -115,11 +115,12 @@ test: $(LIB_OBJS)
 		tests/rt_functional_tests || result=1; \
 	echo ""; \
 	echo "══════════════════════════════════════════════════════════════════════════════"; \
+	echo "  TEST RESULTS"; \
 	if [ $$result -eq 0 ]; then echo "  ALL TESTS PASSED"; else echo "  SOME TESTS FAILED — see details above"; fi; \
 	echo "══════════════════════════════════════════════════════════════════════════════"; \
-	printf "  Unit        │ "; tests/rt_unit_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
-	printf "  Integration │ "; tests/rt_integration_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
-	printf "  Functional  │ "; tests/rt_functional_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //' | awk '{total=$$3; passed=$$5; pct=(total>0)?int(passed*100/total):0; printf "%s | %d%%\n", $$0, pct}'; \
+	printf "  Unit        │ "; tests/rt_unit_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'; \
+	printf "  Integration │ "; tests/rt_integration_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'; \
+	printf "  Functional  │ "; tests/rt_functional_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'; \
 	echo "══════════════════════════════════════════════════════════════════════════════"; \
 	exit $$result
 
@@ -173,8 +174,16 @@ coverage: fclean
 		-format=lcov \
 		-ignore-filename-regex="tests/.*|include/.*" > lcov.info
 	@echo "══════════════════════════════════════════════════════════════════════════════"
-	@echo "✅ Complete unified coverage report generated!"
+	@echo "	  Complete unified coverage report generated!"
 	@echo "   Open: coverage_report/index.html in your browser."
+	@echo "══════════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "══════════════════════════════════════════════════════════════════════════════"
+	@echo "  TEST RESULTS"
+	@echo "══════════════════════════════════════════════════════════════════════════════"
+	@printf "  Unit        │ "; tests/rt_unit_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'
+	@printf "  Integration │ "; tests/rt_integration_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'
+	@printf "  Functional  │ "; tests/rt_functional_tests 2>/dev/null | grep "test cases" | sed 's/\[doctest\] //'
 	@echo "══════════════════════════════════════════════════════════════════════════════"
 
 re: fclean all
