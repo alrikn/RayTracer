@@ -20,8 +20,8 @@ class Rectangle : public Ashape
     private:
     protected:
     public:
-        Rectangle() = default;
-        Rectangle(const Math::Point3d &origin, const Math::Vector3d &bottom_side, const Math::Vector3d &left_side) : Ashape(origin, ShapeType::RECTANGLE), bottom_side(bottom_side), left_side(left_side) {};
+        Rectangle(Math::Point3d origin) : Ashape(origin, RECTANGLE) {};
+        //Rectangle(const Math::Point3d &origin, const Math::Vector3d &bottom_side, const Math::Vector3d &left_side) : Ashape(origin, ShapeType::RECTANGLE), bottom_side(bottom_side), left_side(left_side) {};
         ~Rectangle() = default;
 
         //here the origin is actually the bottom left
@@ -29,6 +29,10 @@ class Rectangle : public Ashape
         Math::Vector3d left_side; //represents the vector from bottom left corner to top left corner
 
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
+
+        /*builder design pattern*/
+        Rectangle& setBottomSide(const Math::Vector3d& bottom_side);
+        Rectangle& setLeftSide(const Math::Vector3d& left_side);
 };
 }
 

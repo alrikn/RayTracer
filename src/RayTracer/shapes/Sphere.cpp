@@ -87,4 +87,9 @@ std::optional<HitRecord> Sphere::hits(const RayTracer::Ray& ray) const
     hit.incomingDirection = ray.direction;
     return hit;
 }
+
+Sphere& Sphere::setRadius(double radius) {
+    this->radius = radius;
+    return *this;
+}
 }

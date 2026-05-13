@@ -22,13 +22,16 @@ class Sphere : public Ashape
     private:
     protected:
     public:
-        Sphere();
-        Sphere(const Math::Point3d &center, double radius) : Ashape(center, ShapeType::SPHERE), radius(radius) {};
+        Sphere(const Math::Point3d &center) : Ashape(center, SPHERE) {};
+        //Sphere(const Math::Point3d &center, double radius) : Ashape(center, ShapeType::SPHERE), radius(radius) {};
         ~Sphere() = default;
 
         double radius = 0;
 
         std::optional<HitRecord> hits(const RayTracer::Ray& ray) const override;
+
+        /*builder design pattern*/
+        Sphere& setRadius(double radius);
 
 };
 }

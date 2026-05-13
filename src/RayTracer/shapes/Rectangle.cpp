@@ -17,4 +17,14 @@ std::optional<HitRecord> Rectangle::hits(const RayTracer::Ray& ray) const
 {
     return std::nullopt; //todo later
 }
+
+Rectangle& Rectangle::setBottomSide(const Math::Vector3d& bottom_side) {
+    this->bottom_side = bottom_side;
+    return *this;
+}
+
+Rectangle& Rectangle::setLeftSide(const Math::Vector3d& left_side) {
+    this->left_side = left_side;
+    return *this;
+}
 }
