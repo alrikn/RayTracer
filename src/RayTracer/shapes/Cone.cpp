@@ -32,6 +32,8 @@ where O is the origin of the ray, D is the direction of the ray and k is the dis
 the infinite cone to get:
 (((O + D * k) - C) - (((O + D * k) - C) . A) * A)^2 - (r/h)^2 * (((O + D * k) - C) . A)^2 = 0
 */
+namespace RayTracer {
+
 
 std::optional<RayTracer::HitRecord> RayTracer::Cone::check_cone_hit(double discriminant, double a, double b, const RayTracer::Ray& ray) const
 {
@@ -116,4 +118,25 @@ std::optional<RayTracer::HitRecord>RayTracer::Cone::hits(const RayTracer::Ray& r
     }
 
     return hit;
+}
+
+
+
+
+/*builder design pattern*/
+
+Cone& Cone::setAxis(const Math::Vector3d& axis) {
+    this->axis = axis.normalize();
+    return *this;
+}
+
+Cone& Cone::setRadius(double radius) {
+    this->radius = radius;
+    return *this;
+}
+
+Cone& Cone::setHeight(double height) {
+    this->height = height;
+    return *this;
+}
 }
