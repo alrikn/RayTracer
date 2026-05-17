@@ -19,10 +19,9 @@ TEST_CASE("Cone: ray aimed at base cap hits", "[cone]") {
     // Ray from directly below the base, going up.
     // The base disk is at y=0 with normal pointing down (away from cone body).
     RayTracer::Cone cone{
-        Math::Point3d{0,0,0},
-        Math::Vector3d{0,1,0},
-        1.0, 1.0
+        Math::Point3d{0,0,0}
     };
+    cone.setAxis(Math::Vector3d{0,1,0}).setHeight(1.0).setRadius(1.0);
     auto hit = cone.hits(make_ray(0,-5,0, 0,1,0));
     CHECK(hit.has_value());
 }
@@ -30,10 +29,9 @@ TEST_CASE("Cone: ray aimed at base cap hits", "[cone]") {
 TEST_CASE("Cone: ray aimed at base center hits", "[cone]") {
     // Same as above but from different distance
     RayTracer::Cone cone{
-        Math::Point3d{0,0,0},
-        Math::Vector3d{0,1,0},
-        1.0, 1.0
+        Math::Point3d{0,0,0}
     };
+    cone.setAxis(Math::Vector3d{0,1,0}).setHeight(1.0).setRadius(1.0);
     auto hit = cone.hits(make_ray(0,-10,0, 0,1,0));
     CHECK(hit.has_value());
     CHECK(hit->distance > 0.0);
@@ -41,10 +39,9 @@ TEST_CASE("Cone: ray aimed at base center hits", "[cone]") {
 
 TEST_CASE("Cone: ray far from cone axis misses", "[cone]") {
     RayTracer::Cone cone{
-        Math::Point3d{0,0,0},
-        Math::Vector3d{0,1,0},
-        1.0, 1.0
+        Math::Point3d{0,0,0}
     };
+    cone.setAxis(Math::Vector3d{0,1,0}).setHeight(1.0).setRadius(1.0);
     // Ray at X=10 pointing down — far outside the cone's radius
     auto hit = cone.hits(make_ray(10,5,0, 0,-1,0));
     CHECK(!hit.has_value());
@@ -52,10 +49,9 @@ TEST_CASE("Cone: ray far from cone axis misses", "[cone]") {
 
 TEST_CASE("Cone: HitRecord color matches cone color", "[cone]") {
     RayTracer::Cone cone{
-        Math::Point3d{0,0,0},
-        Math::Vector3d{0,1,0},
-        1.0, 1.0
+        Math::Point3d{0,0,0}
     };
+    cone.setAxis(Math::Vector3d{0,1,0}).setHeight(1.0).setRadius(1.0);
     cone.setColor(MAGENTA);
     auto hit = cone.hits(make_ray(0,-5,0, 0,1,0));
 
@@ -73,10 +69,9 @@ TEST_CASE("Cone: lateral surface hit covers k1 block and k2 update", "[cone]") {
     //   k2=4.5 < 5.5 → updates hit (covers k2 update path)
     //   Final distance = 4.5 (closer lateral intersection).
     RayTracer::Cone cone{
-        Math::Point3d{0, 0, 0},
-        Math::Vector3d{0, 1, 0},
-        1.0, 1.0
+        Math::Point3d{0, 0, 0}
     };
+    cone.setAxis(Math::Vector3d{0, 1, 0}).setHeight(1.0).setRadius(1.0);
     auto hit = cone.hits(make_ray(0, 0.5, 5,  0, 0, -1));
 
     REQUIRE(hit.has_value());
