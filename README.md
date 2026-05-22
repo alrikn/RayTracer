@@ -38,6 +38,9 @@ Here is a command to run the raytracer and convert the output to PNG:
 ./raytracer scene_config.cfg -o output.ppm ; rm -f output.png; ffmpeg -i output.ppm output.png -loglevel quiet
 ```
 
+
+You can find some example scene configuration files in the `example_scenes` directory.
+
 ## How it works
 
 The parser loads the scene configuration, builds a `Scene` with a camera, shapes, and lights, and then renders it. For each pixel, the camera emits a ray, the renderer finds the closest intersection, and gathers light contributions from ambient, directional, and specular lights. Reflective surfaces spawn additional rays up to a maximum recursion depth to approximate reflections. The final image is written as an ASCII PPM stream.
