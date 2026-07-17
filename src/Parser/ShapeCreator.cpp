@@ -22,7 +22,8 @@ std::shared_ptr<RayTracer::IShape> Parser::createSphere(const libconfig::Setting
     double radius;
     shapeConfig.lookupValue("radius", radius);
 
-    auto sphere = std::make_shared<RayTracer::Sphere>(origin, radius);
+    auto sphere = std::make_shared<RayTracer::Sphere>(origin);
+    sphere->setRadius(radius);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
@@ -40,7 +41,8 @@ std::shared_ptr<RayTracer::IShape> Parser::createPlane(const libconfig::Setting&
     auto normal = parseVector3d(shapeConfig.lookup("normal"));
     auto point = parsePoint3d(shapeConfig.lookup("point"));
 
-    auto plane = std::make_shared<RayTracer::Plane>(normal, point);
+    auto plane = std::make_shared<RayTracer::Plane>(point);
+    plane->setNormal(normal);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
@@ -63,7 +65,8 @@ std::shared_ptr<RayTracer::IShape> Parser::createRectangle(const libconfig::Sett
     auto bottom_side = parseVector3d(shapeConfig.lookup("bottom_side"));
     auto left_side = parseVector3d(shapeConfig.lookup("left_side"));
 
-    auto rectangle = std::make_shared<RayTracer::Rectangle>(origin, bottom_side, left_side);
+    auto rectangle = std::make_shared<RayTracer::Rectangle>(origin);
+    rectangle->setBottomSide(bottom_side).setLeftSide(left_side);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
@@ -83,7 +86,8 @@ std::shared_ptr<RayTracer::IShape> Parser::createCylinder(const libconfig::Setti
     double radius = parseDouble(shapeConfig.lookup("radius"));
     double height = parseDouble(shapeConfig.lookup("height"));
 
-    auto cylinder = std::make_shared<RayTracer::Cylinder>(center, axis, radius, height);
+    auto cylinder = std::make_shared<RayTracer::Cylinder>(center);
+    cylinder->setAxis(axis).setRadius(radius).setHeight(height);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));
@@ -103,7 +107,8 @@ std::shared_ptr<RayTracer::IShape> Parser::createCone(const libconfig::Setting& 
     double radius = parseDouble(shapeConfig.lookup("radius"));
     double height = parseDouble(shapeConfig.lookup("height"));
 
-    auto cone = std::make_shared<RayTracer::Cone>(center, axis, radius, height);
+    auto cone = std::make_shared<RayTracer::Cone>(center);
+    cone->setAxis(axis).setRadius(radius).setHeight(height);
 
     if (shapeConfig.exists("color")) {
         auto color = parseColor(shapeConfig.lookup("color"));

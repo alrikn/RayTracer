@@ -68,4 +68,13 @@ std::optional<HitRecord> Plane::hits(const RayTracer::Ray& ray) const
     }
     return hit;
 }
+
+Plane& Plane::setNormal(const Math::Vector3d& normal) {
+    this->normal = normal.normalize();
+    return *this;
+}
+Plane& Plane::setChessboardPattern(bool chessboard_pattern) {
+    this->chessboard_pattern = chessboard_pattern;
+    return *this;
+}
 }

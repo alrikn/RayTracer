@@ -133,4 +133,20 @@ std::optional<HitRecord> Cylinder::hits(const RayTracer::Ray& ray) const //the p
     }
     return hit;
 }
+/*builder design pattern*/
+
+Cylinder& Cylinder::setAxis(const Math::Vector3d& axis) {
+    this->axis = axis.normalize();
+    return *this;
+}
+
+Cylinder& Cylinder::setRadius(double radius) {
+    this->radius = radius;
+    return *this;
+}
+
+Cylinder& Cylinder::setHeight(double height) {
+    this->height = height;
+    return *this;
+}
 }

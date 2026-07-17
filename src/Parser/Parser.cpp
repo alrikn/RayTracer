@@ -152,10 +152,11 @@ void Parser::parseCamera()
         center - (horizontal / 2.0) - (vertical / 2.0);
 
     RayTracer::Rectangle screen(
-        bottomLeft,
-        horizontal,
-        vertical
+        bottomLeft
+        //horizontal,
+        //vertical
     );
+    screen.setBottomSide(horizontal).setLeftSide(vertical);
 
     RayTracer::Camera camera(origin, screen);
     scene->setCamera(camera);

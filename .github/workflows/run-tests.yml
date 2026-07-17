@@ -1,9 +1,14 @@
 name: Tests and Coverage Ratchet
 
+#since we don't want this workflow to run ever,
+# we can set the trigger to a branch that doesn't exist. This will prevent the workflow from running automatically.
 on:
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+        - "non-existent-branch"
+    pull_request:
+        branches:
+        - "non-existent-branch"
 
 jobs:
   coverage-check:
